@@ -1,0 +1,159 @@
+### Test de santé du serveur
+# ===================================================================
+#         SUITE DE TESTS COMPLÈTE POUR L'API DU FORUM
+# ===================================================================
+#
+# Instructions :
+# 1. Assurez-vous que votre serveur est lancé (npm run dev).
+# 2. Exécutez les requêtes dans l'ordre, du haut vers le bas.
+# 3. Cliquez sur "Send Request" pour chaque bloc séparé par ###.
+#
+#--------------------------------------------------------------------
+
+# Définition d'une variable pour l'URL de base de l'API
+@baseUrl = http://localhost:3000/api
+
+
+### ===============================================
+### ÉTAPE 1 : AUTHENTIFICATION
+### ===============================================
+
+### (REGISTER) Créer un nouvel utilisateur
+# On crée un utilisateur pour nos tests.
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "username": "testeur_alpha",
+    "email": "alpha@example.com",
+    "password": "password_alpha_123"
+}
+
+### -----------------------------------------------
+
+### (LOGIN) Se connecter et sauvegarder le token
+# On se connecte avec l'utilisateur créé et on capture son token JWT.
+# @name loginRequest
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "alpha@example.com",
+    "password": "password_alpha_123"
+}
+
+### Sauvegarder le token dans une variable pour les requêtes futures
+@authToken = {{loginRequest.response.body.token}}
+
+
+### ===============================================
+### ÉTAPE 2 : GESTION DES POSTS
+### ===============================================
+
+### (CREATE POST) Créer un nouveau post (protégé)
+# On utilise le token pour s'authentifier et créer un post.
+# @name createPostRequest
+POST {{baseUrl}}/posts
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Mon premier post en tant que testeur",
+    "content": "Ce contenu est généré par un test automatisé avec REST Client. C'est très efficace pour vérifier que tout fonctionne correctement."
+}
+
+### Sauvegarder l'ID du post créé
+@postId = {{createPostRequest.response.body.id}}
+
+### -----------------------------------------------
+
+### (GET ALL POSTS) Récupérer la liste des posts (public)
+# Pas besoin de token pour cette route.
+GET {{baseUrl}}/posts
+
+### -----------------------------------------------
+
+### (GET ONE POST) Récupérer le post que nous venons de créer (public)
+# On utilise la variable @postId capturée précédemment.
+GET {{baseUrl}}/posts/{{postId}}
+
+### -----------------------------------------------
+
+### (UPDATE POST) Mettre à jour notre post (protégé)
+# On doit être authentifié et être le propriétaire du post.
+PUT {{baseUrl}}/posts/{{postId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Mon premier post (Titre mis à jour)",
+    "content": "Le contenu a également été mis à jour pour prouver que la route PUT fonctionne."
+}
+
+
+### ===============================================
+### ÉTAPE 3 : GESTION DES COMMENTAIRES
+### ===============================================
+
+### (CREATE COMMENT) Ajouter un commentaire à notre post (protégé)
+# On commente le post identifié par @postId.
+# @name createCommentRequest
+POST {{baseUrl}}/posts/{{postId}}/comments
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "content": "Ceci est un commentaire de test. Super post !"
+}
+
+### Sauvegarder l'ID du commentaire créé
+@commentId = {{createCommentRequest.response.body.id}}
+
+### -----------------------------------------------
+
+### (GET ALL COMMENTS) Récupérer les commentaires de notre post (public)
+GET {{baseUrl}}/posts/{{postId}}/comments
+
+### -----------------------------------------------
+
+### (UPDATE COMMENT) Mettre à jour notre commentaire (protégé)
+# Notez que l'URL est /comments/:id, pas imbriquée.
+PUT {{baseUrl}}/comments/{{commentId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "content": "Mon commentaire a été édité."
+}
+
+
+### ===============================================
+### ÉTAPE 4 : GESTION DES UTILISATEURS
+### ===============================================
+
+### (GET MY PROFILE) Récupérer mon propre profil (protégé)
+# Le serveur sait qui je suis grâce à mon token.
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{authToken}}
+
+### -----------------------------------------------
+
+### (GET PUBLIC PROFILE) Récupérer un profil public (ici, celui de l'user 1)
+# Pas besoin de token pour voir un profil public.
+GET {{baseUrl}}/users/1
+
+
+### ===============================================
+### ÉTAPE 5 : TESTS DE SUPPRESSION (À LA FIN)
+### ===============================================
+
+### (DELETE COMMENT) Supprimer notre commentaire (protégé)
+DELETE {{baseUrl}}/comments/{{commentId}}
+Authorization: Bearer {{authToken}}
+
+### -----------------------------------------------
+
+### (DELETE POST) Supprimer notre post (protégé)
+# Cela devrait aussi supprimer les commentaires restants en cascade.
+DELETE {{baseUrl}}/posts/{{postId}}
+Authorization: Bearer {{authToken}}
