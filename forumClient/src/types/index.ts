@@ -4,7 +4,8 @@
 export interface User {
   id: number;
   username: string;
-  email: string; // On l'inclut car la route /users/me la retourne
+  email: string;
+  role: 'admin' | 'moderator' | 'user'; //Ajout ici
 }
 
 // Décrit la structure d'un post, notamment pour la liste du forum

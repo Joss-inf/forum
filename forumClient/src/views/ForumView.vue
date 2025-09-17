@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { ref, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import apiClient from '@/services/apiClient';

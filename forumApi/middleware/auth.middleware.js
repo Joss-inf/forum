@@ -1,44 +1,56 @@
-import jwt from 'jsonwebtoken';
-import { AuthenticationError } from '../utils/errors.js';
+import { compactDecrypt, jwtVerify } from 'jose';
+import { AuthenticationError } from '../utils/errors.js'; 
+import dotenv from 'dotenv';
+dotenv.config();
 
-/**
- * Middleware pour vérifier l'authentification via un token JWT.
- * 
- * Il cherche un token dans l'en-tête 'Authorization: Bearer <token>'.
- * Si le token est valide, il attache le payload de l'utilisateur à `req.user`.
- * Sinon, il passe une erreur au gestionnaire d'erreurs global.
- */
-const authMiddleware = (req, res, next) => {
+const ENCRYPTION_SECRET = new TextEncoder().encode(process.env.JWE_ENCRYPTION_KEY_256);
+const SIGNATURE_SECRET = new TextEncoder().encode(process.env.JWT_SECRET_HS256);
+
+if (!process.env.JWE_ENCRYPTION_KEY_256 || !process.env.JWT_SECRET_HS256) {
+  console.error('ERREUR FATALE : Les variables d\'environnement JWE_ENCRYPTION_KEY_256 et/ou JWT_SECRET_HS256 sont manquantes.');
+  process.exit(1);
+}
+
+const ERROR_MESSAGES = new Map([
+  ['ERR_JWE_DECRYPTION_FAILED', 'Token corrompu ou clé de chiffrement incorrecte.'],
+  ['ERR_JWS_INVALID', 'Signature du token invalide.'],
+  ['JWTExpired', 'Token expiré.'], 
+  ['JWSSignatureVerificationFailed', 'Signature du token invalide.'], 
+  ['JWEInvalid', 'Format de token JWE invalide.'], 
+]);
+
+const authMiddleware = async (req, res, next) => {
   try {
-    // 1. Récupérer l'en-tête d'autorisation
-    const authHeader = req.headers.authorization;
+    const token = req.signedCookies.auth_token;
+  
+    if (!token) throw new AuthenticationError('Token d\'authentification manquant.');
 
-    // 2. Vérifier si l'en-tête existe et s'il est au bon format ('Bearer ...')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      // Si le token est manquant, on passe une erreur d'authentification
-      throw new AuthenticationError('Accès non autorisé. Token manquant ou mal formé.');
+    const { plaintext } = await compactDecrypt(token, ENCRYPTION_SECRET);
+
+    const signedJwt = new TextDecoder().decode(plaintext);
+
+    const { payload } = await jwtVerify(
+      signedJwt,
+      SIGNATURE_SECRET,
+      { algorithms: ['HS256'] }
+    );
+    req.user = payload.user; 
+    next(); 
+
+  }  catch (error) {
+
+    let errorMessage = 'Token invalide ou expiré.'; 
+    const statusCode = 401; 
+
+    if (ERROR_MESSAGES.has(error.code)) {
+      errorMessage = ERROR_MESSAGES.get(error.code);
+    } else if (ERROR_MESSAGES.has(error.name)) {
+      errorMessage = ERROR_MESSAGES.get(error.name);
+    } else if (error instanceof AuthenticationError) {
+      errorMessage = error.message; 
     }
 
-    // 3. Isoler le token en retirant le préfixe 'Bearer '
-    const token = authHeader.split(' ')[1];
-
-    // 4. Vérifier et décoder le token.
-    // jwt.verify lèvera une erreur si le token est invalide (expiré, signature incorrecte, etc.)
-    // Cette erreur sera attrapée par le bloc catch.
-    const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
-
-    // 5. Attacher les informations de l'utilisateur à l'objet de la requête.
-    // Le payload que nous avons créé dans auth.service.js était { user: { id: ... } }
-    // Nous rendons donc `req.user` disponible pour les prochains middlewares et contrôleurs.
-    req.user = decodedPayload.user;
-
-    // 6. Si tout est bon, passer à la suite (le contrôleur)
-    next();
-  } catch (error) {
-    // Si jwt.verify échoue (ex: TokenExpiredError), il sera attrapé ici.
-    // On crée une erreur standardisée pour ne pas fuiter de détails techniques.
-    // On passe cette erreur à notre gestionnaire d'erreurs global via next().
-    next(new AuthenticationError('Token invalide ou expiré.'));
+    res.status(statusCode).json({ message: errorMessage });
   }
 };
 

@@ -2,59 +2,128 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { Ref, ComputedRef } from 'vue';
-import apiClient from '@/services/apiClient';
-import router from '@/router';
-import type { User, LoginCredentials, RegisterData } from '@/types';
+import apiClient from '@/services/apiClient'; // Assurez-vous que ce chemin est correct
+import router from '@/router'; // Assurez-vous que ce chemin est correct
+import type { User, LoginCredentials, RegisterData } from '@/types'; // Assurez-vous que ces types sont définis
 
 export const useAuthStore = defineStore('auth', () => {
   // --- STATE ---
-  const user: Ref<User | null> = ref(JSON.parse(localStorage.getItem('user') || 'null'));
-  const token: Ref<string | null> = ref(localStorage.getItem('token'));
+  const user: Ref<User | null> = ref(null);
 
   // --- GETTERS ---
-  const isAuthenticated: ComputedRef<boolean> = computed(() => !!token.value);
+  const isAuthenticated: ComputedRef<boolean> = computed(() => !!user.value);
+  const userRole: ComputedRef<string | null> = computed(() => user.value?.role ?? null);
 
   // --- ACTIONS ---
-  function setAuthData(userData: User, userToken: string) {
-    user.value = userData;
-    token.value = userToken;
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('token', userToken);
-  }
 
-  function clearAuthData() {
-    user.value = null;
-    token.value = null;
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    router.push('/login');
-  }
-
-  async function login(credentials: LoginCredentials) {
-    const response = await apiClient.post<{ user: User; token: string }>('/auth/login', credentials);
-    setAuthData(response.data.user, response.data.token);
-    await router.push('/forum');
-  }
-
-  async function register(userData: RegisterData) {
-    await apiClient.post('/auth/register', userData);
-    await router.push('/login');
-  }
-
-  function logout() {
-    clearAuthData();
-  }
-  
-  async function checkAuthOnLoad() {
-    if (!token.value) return;
+  /**
+   * Tente de récupérer les informations de l'utilisateur connecté.
+   * Le navigateur enverra automatiquement le cookie d'authentification.
+   */
+  async function fetchUser() {
     try {
-      const response = await apiClient.get<User>('/users/me');
+      const response = await apiClient.get<User>('/users/me'); // Endpoint pour récupérer le profil de l'utilisateur connecté
       user.value = response.data;
-    } catch (error) {
-      console.error("Token invalide, déconnexion.", error);
-      clearAuthData();
+    } catch (error: any) {
+      user.value = null;
+      // Les route guards ou d'autres logiques peuvent gérer la redirection si nécessaire.
     }
   }
 
-  return { user, token, isAuthenticated, login, register, logout, checkAuthOnLoad };
+  /**
+   * Gère la connexion de l'utilisateur.
+   */
+  async function login(credentials: LoginCredentials) {
+    try {
+      const response = await apiClient.post<{ user: User }>('/auth/login', credentials);
+      user.value = response.data.user; // Met à jour l'état de l'utilisateur après la connexion
+    } catch (err: any) {
+      throw err;
+    }
+  }
+
+  /**
+   * Gère l'enregistrement de l'utilisateur.
+   */
+  async function register(userData: RegisterData) {
+    try {
+      await apiClient.post('/auth/register', userData);
+      // Après l'inscription, tu peux choisir de connecter l'utilisateur automatiquement
+      // ou le laisser se connecter manuellement. Ici, on ne fait rien de plus.
+    } catch (err: any) {
+      throw err;
+    }
+  }
+
+  /**
+   * Gère la déconnexion de l'utilisateur.
+   */
+  async function logout() {
+    try {
+      await apiClient.post('/auth/logout'); // Appelle l'endpoint de déconnexion du backend
+    } catch (err) {
+      console.warn('Erreur lors du logout côté serveur :', err);
+    } finally {
+      user.value = null; // Réinitialise l'état de l'utilisateur côté client
+      await router.push('/login'); // Redirige vers la page de connexion
+    }
+  }
+
+  /**
+   * Initialise l'état d'authentification au démarrage de l'application.
+   */
+  async function initializeAuth() {
+    try {
+      await fetchUser();
+    } catch (err: any) {
+      // Gérer l'erreur si initializeAuth échoue (par ex. le serveur n'est pas accessible)
+      console.error("Erreur lors de l'initialisation de l'authentification:", err);
+      // Ne pas propager l'erreur ici pour ne pas bloquer le démarrage de l'app
+    }
+  }
+
+  /**
+   * Met à jour le profil de l'utilisateur.
+   * @param profileData Les données du profil à mettre à jour (username, email).
+   */
+  async function updateProfile(profileData: { username: string; email: string }) {
+    try {
+      // Envoie les données mises à jour au backend
+      const response = await apiClient.put<User>('/users/profile', profileData); // Endpoint de mise à jour du profil
+      user.value = response.data; // Met à jour l'état de l'utilisateur dans le store avec les nouvelles données
+    } catch (err: any) {
+      console.error('Erreur lors de la mise à jour du profil:', err);
+      throw err; // Propage l'erreur au composant pour affichage
+    }
+  }
+
+  /**
+   * Change le mot de passe de l'utilisateur.
+   * @param passwordData Les données du mot de passe (currentPassword, newPassword).
+   */
+  async function changePassword(passwordData: { currentPassword: string; newPassword: string }) {
+    try {
+      // Envoie les données du mot de passe au backend
+      await apiClient.put('/users/change-password', passwordData); // Endpoint de changement de mot de passe
+      // Pas de mise à jour de l'état 'user' ici, car le mot de passe n'est pas dans l'objet user public.
+    } catch (err: any) {
+      console.error('Erreur lors du changement de mot de passe:', err);
+      throw err; // Propage l'erreur au composant pour affichage
+    }
+  }
+
+  return {
+
+    user,
+    isAuthenticated,
+    userRole,
+
+    login,
+    register,
+    logout,
+    initializeAuth,
+    fetchUser,
+    updateProfile, 
+    changePassword, 
+  };
 });

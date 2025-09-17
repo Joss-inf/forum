@@ -1,1 +1,3 @@
-npm install ultimate-express pg bcryptjs jsonwebtoken express-validator winston dotenv cors express-rate-limit
+npm install ultimate-express pg bcryptjs jose
+jsonwebtoken express-validator winston
+dotenv cors express-rate-limit lru-cache cookie-parser zod express-validator

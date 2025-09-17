@@ -2,8 +2,10 @@
 import { ref } from 'vue';
 import type { Ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
+const router = useRouter();
 const form = ref({ email: '', password: '' });
 const error: Ref<string | null> = ref(null);
 
@@ -11,10 +13,12 @@ async function handleLogin() {
   try {
     error.value = null;
     await authStore.login(form.value);
+    router.push('/forum');
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Email ou mot de passe incorrect.';
   }
 }
+
 </script>
 
 <template>

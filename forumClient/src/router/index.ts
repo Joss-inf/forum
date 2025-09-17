@@ -1,9 +1,6 @@
+// src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-
-// Notez que nous n'importons plus les composants de vue directement en haut du fichier.
-// C'est la clé du lazy loading.
-// import HomeView from '../views/HomeView.vue'; // <- Ligne supprimée
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,25 +8,25 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      // La syntaxe `() => import(...)` dit à Vite/Webpack de créer un fichier JS séparé ("chunk")
-      // pour cette vue, qui ne sera téléchargé que lorsque l'utilisateur naviguera vers '/'.
       component: () => import('../views/HomeView.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue')
+      component: () => import('../views/LoginView.vue'),
+      meta: { requiresAuth: false } 
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/RegisterView.vue')
+      component: () => import('../views/RegisterView.vue'),
+      meta: { requiresAuth: false }
     },
     {
       path: '/forum',
       name: 'forum',
       component: () => import('../views/ForumView.vue'),
-      meta: { requiresAuth: true } // La méta-information pour notre garde de navigation
+      meta: { requiresAuth: true }
     },
     {
       path: '/profile',
@@ -38,39 +35,48 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/posts/:id', // Le :id est un paramètre dynamique
+      path: '/posts/:id',
       name: 'post-detail',
       component: () => import('../views/PostDetailView.vue'),
       meta: { requiresAuth: true }
     },
-    // Vous pouvez continuer à ajouter d'autres routes ici en suivant le même modèle.
-    // Par exemple, pour la page de détail d'un post :
-    // {
-    //   path: '/posts/:id',
-    //   name: 'post-detail',
-    //   component: () => import('../views/PostDetailView.vue'),
-    //   meta: { requiresAuth: true }
-    // }
+    {
+    path: '/unauthorized',
+    name: 'unauthorized',
+    component: () => import('../views/UnauthorizedView.vue'),
+    meta: { requiresAuth: true }
+    }
   ]
 });
 
-// La garde de navigation reste exactement la même.
-// Elle est indépendante de la manière dont les composants sont chargés.
+/**
+ * Garde de navigation globale.
+ * Elle s'exécute avant chaque changement de route.
+ * IMPORTANT : Cette garde suppose que l'état d'authentification a déjà été initialisé
+ * dans `main.ts` avant que l'application ne soit montée.
+ */
+
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
-  
-  // On initialise le store ici pour s'assurer qu'il est prêt avant la vérification
-  // C'est une sécurité supplémentaire si l'utilisateur recharge la page sur une route protégée.
-  if (!authStore.token) {
-    authStore.token = localStorage.getItem('token');
-  }
+  const requiresAuth = to.meta.requiresAuth;
+  const allowedRoles = to.meta.roles;
+  const isAuthenticated = authStore.isAuthenticated;
+  const userRole = authStore.user?.role; // Assure-toi que `authStore.user` contient un `role`
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    // Si la route requiert une authentification et que l'utilisateur n'est pas connecté,
-    // on le redirige vers la page de connexion.
+  if (requiresAuth && !isAuthenticated) {
     next({ name: 'login' });
-  } else {
-    // Sinon, on autorise la navigation.
+  } 
+  else if ((to.name === 'login' || to.name === 'register') && isAuthenticated) {
+    next({ name: 'forum' });
+  } 
+  else if (
+    requiresAuth &&
+    Array.isArray(allowedRoles) &&
+    !allowedRoles.includes(userRole)
+  ) {
+    next({ name: 'unauthorized' }); // Rediriger vers une page 403
+  } 
+  else {
     next();
   }
 });

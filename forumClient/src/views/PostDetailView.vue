@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { ref, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // <-- 1. Importer useRouter
@@ -70,13 +70,12 @@ onMounted(async () => {
       <header class="post-header">
         <div class="header-main">
           <h1>{{ post.title }}</h1>
+          <div class ='post-warper'>
           <div class="post-meta">
             Par <span class="author">{{ post.author_username }}</span>
             le <span class="date">{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
           </div>
-        </div>
-        <!-- 6. LE NOUVEAU BOUTON DE SUPPRESSION -->
-        <div class="header-actions">
+          <div class="header-actions">
           <button
             v-if="authStore.user && post && authStore.user.id === post.user_id"
             @click="deletePost"
@@ -85,6 +84,9 @@ onMounted(async () => {
             Supprimer le sujet
           </button>
         </div>
+        </div>
+        </div>
+
       </header>
       
       <div class="post-body" v-html="post.content"></div>
@@ -106,10 +108,11 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.post-detail-view{
+  width: 100vw;
+  max-width: 800px;
+}
 .post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   margin-bottom: 2rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 1rem;
@@ -117,6 +120,10 @@ onMounted(async () => {
 }
 .post-header h1 {
   margin: 0;
+}
+.post-warper{
+  display: flex;
+  justify-content: space-between;
 }
 .post-meta {
   margin-top: 0.5rem;
