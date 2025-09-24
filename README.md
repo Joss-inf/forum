@@ -1,8 +1,8 @@
-# Forum 
+# Forum vuesphere
 
 ## projet en chantier 
 
-Bienvenue sur le Forum, une plateforme de discussion moderne et interactive construite avec Vue.js 3, Pinia, Axios et un backend robuste basé sur Ultimate Express.
+Bienvenue sur le Forum vuesphere, une plateforme de discussion moderne et interactive construite avec Vue.js 3, Pinia, Axios et un backend robuste basé sur Ultimate Express.
 
 Ce projet vise à offrir une expérience utilisateur fluide et rapide pour la création et la gestion de discussions, de posts et de commentaires.
 🚀 Fonctionnalités
