@@ -1,4 +1,11 @@
 # Forum vuesphere
+<img width="1563" height="1221" alt="image" src="https://github.com/user-attachments/assets/8e43d331-de6e-40b5-a34e-2ccb6b8b7ed6" />
+<img width="1579" height="1226" alt="image" src="https://github.com/user-attachments/assets/e03f2465-ff6e-4bfb-9546-64951839a617" />
+<img width="1573" height="1147" alt="image" src="https://github.com/user-attachments/assets/67bd4a84-4367-416c-a26a-6e98ea8e19f3" />
+<img width="1605" height="1229" alt="image" src="https://github.com/user-attachments/assets/3502d799-735a-4fe9-9567-8f12eb3f10fb" />
+
+
+
 
 ## projet en chantier 
 
