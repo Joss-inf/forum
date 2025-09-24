@@ -79,6 +79,12 @@ border: 1px solid var(--border-color);
 border-radius: 8px;
 padding: 1.5rem;
 margin-bottom: 2rem;
+position: absolute;
+left: 0;
+right: 0;
+margin-inline: auto;
+z-index: 1;
+max-width: 1000px;
 }
 .form-group {
 margin-bottom: 1rem;
@@ -90,12 +96,13 @@ font-weight: 500;
 }
 .form-group input,
 .form-group textarea {
-width: 100%;
 padding: 0.75rem;
 border: 1px solid var(--border-color);
 border-radius: 4px;
 box-sizing: border-box;
 font-family: inherit;
+width: 100%;
+max-width: 100%;
 }
 .submit-button {
 padding: 0.75rem 1.5rem;

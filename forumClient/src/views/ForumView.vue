@@ -4,7 +4,9 @@ import type { Ref } from 'vue';
 import apiClient from '@/services/apiClient';
 import CreatePostForm from '@/components/CreatePostForm.vue';
 import type { Post } from '@/types';
+import { useAuthStore } from '@/stores/auth';
 
+const authStore = useAuthStore();
 const posts: Ref<Post[]> = ref([]);
 const isLoading: Ref<boolean> = ref(true);
 const error: Ref<string | null> = ref(null);
@@ -32,9 +34,13 @@ onMounted(async () => {
 <template>
   <div>
     <div class="forum-header">
-      <h1>Forum - Derniers Posts</h1>
+      <h1>Forum</h1>
       <!-- 3. Le bouton pour basculer l'affichage du formulaire -->
-      <button @click="isCreating = !isCreating" class="create-button">
+      <button
+        v-if="authStore.user"
+        @click="isCreating = !isCreating"
+        class="create-button"
+      >
         {{ isCreating ? 'Annuler' : 'Créer un post' }}
       </button>
     </div>
@@ -74,59 +80,139 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.post-item-link {
-  text-decoration: none;
-  color: inherit;
+:root {
+  --primary-color: #4a90e2; /* Un bleu moderne et apaisant */
+  --primary-color-dark: #357ABD;
+  --secondary-color: #555;
+  --text-color-light: #777;
+  --bg-color: #f5f7fa; /* Un fond gris très clair, presque blanc */
+  --card-bg-color: #fff;
+  --border-color: #e3e8ee;
+  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.1);
+  --font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
 }
+
+/* Styles globaux pour une meilleure esthétique */
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--secondary-color);
+  margin: 0;
+  padding: 2rem;
+}
+template{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* En-tête du forum */
 .forum-header {
+  margin-top: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+
+  background: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  margin: 100px auto 2.5rem auto;
+  max-width: 1000px;
 }
+
+.forum-header h1 {
+  font-size: 2.0rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+  padding-left: 10px;
+}
+
+/* Bouton pour créer un post */
 .create-button {
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
   background-color: var(--primary-color);
   color: white;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+  height: 55px;
 }
-.loading-state, .empty-state {
+
+.create-button:hover {
+  background-color: white;
+  color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 144, 226, 0.5);
+}
+
+/* États de chargement et d'erreur */
+.loading-state, .empty-state, .error-message {
   text-align: center;
   padding: 3rem;
-  color: var(--secondary-color);
+  color: var(--text-color-light);
+  font-size: 1.1rem;
 }
+
 .error-message {
-  color: #dc3545;
-  text-align: center;
-  padding: 3rem;
+  color: #e74c3c;
+  font-weight: 500;
 }
+
+/* Liste des posts */
 .post-list {
   list-style: none;
   padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
+.post-item-link {
+  text-decoration: none;
+  color: inherit;
+  max-width: 1000px;
+  width: 100%;
+}
+
+/* Style de chaque élément de post */
 .post-item {
-  background-color: #fff;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  transition: box-shadow 0.2s ease-in-out;
+  background-color: white;
+  padding: 2rem;
+  margin-bottom: 0.1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
+
 .post-item:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-5px);
+
 }
+
+/* Contenu du post */
+.post-header {
+  display: flex;
+  flex-direction: column;
+}
+
 .post-title {
-  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: var(--primary-color);
+  margin: 0 0 0.5rem 0;
 }
+
 .post-meta {
   font-size: 0.9rem;
-  color: var(--secondary-color);
+  color: var(--text-color-light);
 }
+
 .author {
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--secondary-color);
 }
 </style>

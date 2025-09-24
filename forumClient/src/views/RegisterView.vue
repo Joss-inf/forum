@@ -175,148 +175,173 @@ async function handleRegister() {
 
       <p v-if="apiError" class="error-message">{{ apiError }}</p>
       
-      <button type="submit" class="submit-button" :disabled="!isFormValid && Object.values(form).some(val => val !== '')">S'inscrire</button>
+      <button type="submit" class="submit-button" :disabled="!isFormValid ">S'inscrire</button>
     </form>
   </div>
 </template>
 
 <style scoped>
-/* Styles de base pour le conteneur du formulaire */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+  --primary-color: #6a11cb;
+  --primary-color-dark: #2575fc;
+  --secondary-color: #2c3e50;
+  --text-color: #333;
+  --text-color-light: #7f8c8d;
+  --bg-color: linear-gradient(to right, #6a11cb, #2575fc);
+  --card-bg-color: #fff;
+  --border-color: #e0e6ed;
+  --input-bg-color: #f0f0f0;
+  --shadow-light: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15);
+  --error-color: #e74c3c;
+}
+
 .auth-form-container {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f0f2f5;
-  padding: 1rem 20px; /* Fusion du padding */
+  padding: 2rem;
   box-sizing: border-box;
-  width: 100vw;
+  animation: fadeInBackground 1.5s ease-out forwards;
 }
 
-/* Styles du formulaire lui-même */
+@keyframes fadeInBackground {
+  from { background-position: 0% 50%; opacity: 0.8; }
+  to { background-position: 100% 50%; opacity: 1; }
+}
+
+
+
 .auth-form {
-  background-color: #ffffff;
-  padding: 40px; /* Un padding plus généreux pour une meilleure aération */
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  background-color: var(--card-bg-color);
+  padding: 3rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  animation: slideIn 0.8s ease-out forwards;
   width: 100%;
-  max-width: 400px;
-  text-align: center;
-  font-family: 'Inter', sans-serif; /* L'une des familles de polices les plus courantes */
-  box-sizing: border-box;
+  max-width: 440px;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 2em;
+@keyframes slideIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auth-form h1 {
+  font-size: 2.5rem;
   font-weight: 700;
+  color: var(--primary-color);
+  margin:0;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: 1px;
 }
 
-/* Styles pour le groupe label/input */
-.form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-label {
+.form-group label {
   display: block;
-  margin-bottom: 8px;
-  color: #555;
-  font-weight: 600;
-  font-size: 0.9em;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--secondary-color);
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+.form-group input {
   width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1em;
-  color: #333;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  padding: 0.5rem 0rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg-color);
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
   box-sizing: border-box;
+  border-radius: 10px;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+.form-group input:focus {
   outline: none;
+  box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15);
+  background-color: #fff;
 }
 
-/* Messages d'erreur */
+.form-group input::placeholder {
+  color: var(--text-color-light);
+  opacity: 0.6;
+}
+
 .error-message {
-  color: #dc3545;
-  font-size: 0.85em;
-  margin-top: 5px;
-  text-align: left;
+  color: red;
+  border-radius: 8px;
+  margin-top: 0.1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: shake 0.5s ease-in-out;
 }
 
-/* Bouton de soumission */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
 .submit-button {
-  background-color: #007bff;
-  color: white;
-  padding: 14px 25px;
+  width: 100%;
+  padding: 1.1rem;
   border: none;
-  border-radius: 8px;
-  font-size: 1.1em;
+  border-radius: 10px;
+  background: #e0e6ed;
+  color: #7f8c8d;
+  font-size: 1.15rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  width: 100%;
-  margin-top: 20px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  border-radius: 100px;
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
 }
 
 .submit-button:disabled {
-  background-color: #cccccc;
+  background-color: #ccc;
+  color: #999;
   cursor: not-allowed;
   box-shadow: none;
+  transform: none;
 }
 
-/* --- Styles pour l'animation de succès --- */
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(20px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-20px); }
-}
+/* Responsive */
+@media (max-width: 600px) {
+  .auth-form {
+    padding: 2.5rem 1.5rem;
+    border-radius: 12px;
+  }
 
-.success-message-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f0f2f5;
-  text-align: center;
-  animation: fadeInOut 2s ease-in-out;
-}
+  .auth-form h1 {
+    font-size: 2rem;
+  }
 
-.success-message h2 {
-  font-size: 2.5em;
-  color: #28a745;
-  margin-bottom: 10px;
-  animation: appear 1s ease-out;
-}
+  .form-group label,
+  .form-group input,
+  .submit-button,
+  .error-message {
+    font-size: 0.9rem;
+  }
 
-.success-message p {
-  font-size: 1.2em;
-  color: #555;
-  animation: appear 1.2s ease-out;
-}
+  .submit-button {
+    padding: 0.9rem;
+  }
 
-@keyframes appear {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  .auth-form-container{
+    padding: 1rem;
+  }
 }
 </style>

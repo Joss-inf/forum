@@ -60,13 +60,15 @@ async function handleSubmit() {
   border-radius: 8px;
 }
 textarea {
-  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   box-sizing: border-box;
   font-family: inherit;
   margin-bottom: 1rem;
+
 }
 button {
   padding: 0.5rem 1rem;

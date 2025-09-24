@@ -21,8 +21,7 @@ export async function registerUser(userData) {
   } catch (e) {
     // Si c'est une erreur de duplicata...
     if (e.code === 'ER_DUP_ENTRY') { // ou le code équivalent pour votre BDD
-      // ...vous lancez votre erreur personnalisée !
-      throw new ConflictError('Cet email est déjà utilisé.');
+      throw new ConflictError('Problème identifiant.');
     }
     // Pour toute autre erreur de base de données
     throw e;
@@ -35,17 +34,13 @@ export async function loginUser(credentials, res) {
   const user = await AuthModel.findByEmail(email);
   const dummyHash = '$2b$10$abcdefghijklmnopqrstuv'; // Un hash bcrypt valide mais fixe (doit être constant)
 
-if (!user) {
-  // Comparer quand même avec un hash dummy pour éviter timing attack
-  await bcrypt.compare(password, dummyHash);
-  throw new AuthenticationError('Identifiants invalides.');
-}
-const isValid = await bcrypt.compare(password, user.password_hash);
+  if (!user) {
+    await bcrypt.compare(password, dummyHash);
+    throw new AuthenticationError('Identifiants invalides.');
+  }
 
-if (!isValid) {
-  throw new AuthenticationError('Identifiants invalides.');
-}
-  user.password_hash = null
+  const isValid = await bcrypt.compare(password, user.password_hash);
+  if (!isValid) throw new AuthenticationError('Identifiants invalides.');
 
   const payload = {
     user: { id: user.id },
@@ -57,9 +52,9 @@ if (!isValid) {
 
   setAuthCookie(res,jwtToken)
   setCsrfCookie(res,csrf.signed)
-
+  
   return {
-    userId: user.id,
+    user: user.id,
   };
 }
 

@@ -26,7 +26,7 @@ const router = createRouter({
       path: '/forum',
       name: 'forum',
       component: () => import('../views/ForumView.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: '/profile',
@@ -55,6 +55,8 @@ const router = createRouter({
  * IMPORTANT : Cette garde suppose que l'état d'authentification a déjà été initialisé
  * dans `main.ts` avant que l'application ne soit montée.
  */
+
+
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();

@@ -32,7 +32,7 @@ export async function changePassword(req, res, next) {
 
 export async function logout(req, res, next) {
   try {
-    const userId = req.userId;
+    const userId = req.user?.id;
     await AuthService.logoutUser(userId, res);
     res.status(204).send();
   } catch (err) {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import type { Ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
@@ -13,74 +13,267 @@ async function handleLogin() {
   try {
     error.value = null;
     await authStore.login(form.value);
-    router.push('/forum');
+    await nextTick();
+    router.push('/forum'); // Redirige vers le forum après connexion réussie
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Email ou mot de passe incorrect.';
   }
 }
-
 </script>
 
 <template>
-  <div class="auth-form-container">
-    <form @submit.prevent="handleLogin" class="auth-form">
-      <h1>Connexion</h1>
-      <div class="form-group">
-        <label for="email">Adresse Email</label>
-        <input type="email" id="email" v-model="form.email" required autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input type="password" id="password" v-model="form.password" required autocomplete="current-password">
-      </div>
-      <p v-if="error" class="error-message">{{ error }}</p>
-      <button type="submit" class="submit-button">Se connecter</button>
-    </form>
+  <div class="auth-page">
+    <div class="auth-form-container">
+      <form @submit.prevent="handleLogin" class="auth-form">
+        <h1>Connexion</h1>
+        <p class="subtitle">Connectez-vous pour accéder à votre espace.</p>
+
+        <div class="form-group">
+          <label for="email">Adresse Email</label>
+          <input
+            type="email"
+            id="email"
+            v-model="form.email"
+            required
+            autocomplete="email"
+            placeholder="votre.email@example.com"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            v-model="form.password"
+            required
+            autocomplete="current-password"
+            placeholder="********"
+          />
+        </div>
+
+        <p v-if="error" class="error-message">{{ error }}</p>
+
+        <button type="submit" class="submit-button">Se connecter</button>
+
+        <div class="form-links">
+          <router-link to="/forgot-password">Mot de passe oublié ?</router-link>
+          <router-link to="/register">S'inscrire</router-link>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <style scoped>
+/* Import des polices depuis Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap');
+
+/* Variables pour un design cohérent et modifiable */
+:root {
+  --primary-color: #6a11cb; /* Un violet plus profond */
+  --primary-color-dark: #2575fc; /* Un bleu plus vif pour le hover */
+  --secondary-color: #2c3e50;
+  --text-color: #333;
+  --text-color-light: #7f8c8d;
+  --bg-color: linear-gradient(to right, #6a11cb, #2575fc); /* Dégradé pour le fond */
+  --card-bg-color: #fff;
+  --border-color: #e0e6ed;
+  --input-bg-color: #f0f0f0; /* Un gris très clair pour les inputs */
+  --shadow-light: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15);
+  --error-color: #e74c3c;
+}
+
+/* Styles globaux pour la page (le conteneur principal du composant) */
+.auth-page {
+  font-family: 'Poppins', 'Inter', sans-serif; /* Poppins en priorité */
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+  animation: fadeInBackground 1.5s ease-out forwards; /* Animation d'apparition du fond */
+}
+
+@keyframes fadeInBackground {
+    from { background-position: 0% 50%; opacity: 0.8; }
+    to { background-position: 100% 50%; opacity: 1; }
+}
+
+/* Conteneur principal du formulaire */
 .auth-form-container {
   display: flex;
   justify-content: center;
-  padding-top: 2rem;
+  align-items: center;
+  width: 100%;;
 }
+
+/* Style du formulaire lui-même */
 .auth-form {
+  background-color: var(--card-bg-color);
+  padding: 3rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  animation: slideIn 0.8s ease-out forwards; /* Animation d'apparition du formulaire */
   width: 100%;
-  max-width: 400px;
-  padding: 2rem;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background-color: #fff;
+  max-width: 440px;
 }
+
+@keyframes slideIn {
+    from { opacity: 0;  }
+    to { opacity: 1; }
+}
+
+
+
+/* Titre du formulaire */
+.auth-form h1 {
+  font-size: 2.5rem; /* Plus grand et plus impactant */
+  font-weight: 700;
+  color: var(--primary-color); /* Utilise la couleur primaire */
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: 1px; /* Espacement des lettres pour un look moderne */
+}
+
+.auth-form .subtitle {
+  font-size: 1rem;
+  color: var(--text-color-light);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Groupe de champ de saisie */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem; /* Plus d'espace entre les groupes */
 }
+
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  margin-bottom: 0.8rem; /* Plus d'espace entre le label et l'input */
+  font-size: 0.95rem; /* Légèrement plus grand */
+  font-weight: 500; /* Moins gras que 600 pour un look plus doux */
+  color: var(--secondary-color);
 }
+
+/* Champ de saisie */
 .form-group input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 1rem 1.2rem; /* Plus de padding pour une meilleure ergonomie */
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: 10px; /* Coins plus arrondis */
+  background-color: var(--input-bg-color);
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
   box-sizing: border-box;
 }
+
+.form-group input::placeholder {
+  color: var(--text-color-light);
+  opacity: 0.6;
+}
+
+.form-group input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15); /* Ombre douce au focus */
+  background-color: #fff; /* Fond blanc au focus pour un contraste */
+}
+
+/* Bouton de soumission */
 .submit-button {
   width: 100%;
-  padding: 0.75rem;
+  padding: 1.1rem; /* Plus de padding */
   border: none;
-  border-radius: 4px;
-  background-color: var(--primary-color);
-  color: white;
-  font-size: 1rem;
+  border-radius: 10px; /* Coins plus arrondis */
+  background:  #e0e6ed; /* Dégradé pour le bouton */
+  color: #7f8c8d;
+  font-size: 1.15rem; /* Plus grand */
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.8px; /* Espacement des lettres */
+  text-transform: uppercase; /* Texte en majuscules */
+  border-radius: 100px;
 }
+
+.submit-button:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
+  transform: translateY(-3px); /* Effet 3D léger */
+}
+
+.submit-button:active {
+  transform: translateY(0); /* Retour à la position normale */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Message d'erreur */
 .error-message {
-  color: #dc3545;
-  margin-top: 1rem;
+  color: var(--error-color);
+  background-color: #ffebee; /* Fond léger pour le message d'erreur */
+  border: 1px solid #ef9a9a;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
   text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: shake 0.5s ease-in-out; /* Animation pour l'erreur */
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* Option "mot de passe oublié" et "s'inscrire" */
+.form-links {
+  margin-top: 2rem;
+  text-align: center;
+  display: flex; /* Pour aligner les liens */
+  justify-content: space-around; /* Pour espacer les liens */
+}
+
+.form-links a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.3s, text-decoration 0.3s;
+}
+
+.form-links a:hover {
+  color: var(--primary-color-dark);
+  text-decoration: underline;
+}
+
+/* Media queries pour la réactivité */
+@media (max-width: 600px) {
+  .auth-form {
+    padding: 2.5rem 1.5rem;
+    border-radius: 12px;
+  }
+  .auth-form h1 {
+    font-size: 2rem;
+  }
+  .form-group label,
+  .form-group input,
+  .submit-button,
+  .error-message,
+  .form-links a {
+    font-size: 0.9rem;
+  }
+  .submit-button {
+    padding: 0.9rem;
+  }
+  .auth-page {
+    padding: 1rem;
+  }
 }
 </style>

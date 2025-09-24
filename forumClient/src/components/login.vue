@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="form-box">
-      <h1>Connexion 🔐</h1>
+      <h1>Connexion </h1>
       <p>Connecte-toi à ton compte</p>
 
       <form @submit.prevent="login">

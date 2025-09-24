@@ -34,6 +34,17 @@
   --color-text: var(--vt-c-text-light-1);
 
   --section-gap: 160px;
+
+
+  --primary-color: #4a90e2; /* Un bleu moderne et apaisant */
+  --primary-color-dark: #357ABD;
+  --secondary-color: #555;
+  --text-color-light: #777;
+  --bg-color: #f5f7fa; /* Un fond gris très clair, presque blanc */
+  --card-bg-color: #fff;
+  --border-color: #e3e8ee;
+  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {

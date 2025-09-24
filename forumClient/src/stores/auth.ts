@@ -37,6 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await apiClient.post<{ user: User }>('/auth/login', credentials);
       user.value = response.data.user; // Met à jour l'état de l'utilisateur après la connexion
+      console.log(user.value)
     } catch (err: any) {
       throw err;
     }
@@ -59,15 +60,15 @@ export const useAuthStore = defineStore('auth', () => {
    * Gère la déconnexion de l'utilisateur.
    */
   async function logout() {
-    try {
-      await apiClient.post('/auth/logout'); // Appelle l'endpoint de déconnexion du backend
-    } catch (err) {
-      console.warn('Erreur lors du logout côté serveur :', err);
-    } finally {
-      user.value = null; // Réinitialise l'état de l'utilisateur côté client
-      await router.push('/login'); // Redirige vers la page de connexion
-    }
+  try {
+    await apiClient.post('/auth/logout', { userId: user.value });
+  } catch (err) {
+    console.warn('Erreur lors du logout côté serveur :', err);
+  } finally {
+    user.value = null;
+    await router.push('/login');
   }
+}
 
   /**
    * Initialise l'état d'authentification au démarrage de l'application.

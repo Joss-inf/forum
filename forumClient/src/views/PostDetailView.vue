@@ -65,17 +65,21 @@ onMounted(async () => {
   <div class="post-detail-view">
     <div v-if="isLoading" class="loading-state">Chargement...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
-    <article v-else-if="post" class="post-content">
-      
-      <header class="post-header">
-        <div class="header-main">
-          <h1>{{ post.title }}</h1>
-          <div class ='post-warper'>
+
+    <div v-else-if="post" class="post-wrapper">
+      <article class="post-card">
+        <header class="post-header">
+          <h1 class="post-title">{{ post.title }}</h1>
           <div class="post-meta">
-            Par <span class="author">{{ post.author_username }}</span>
-            le <span class="date">{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
+            <span>Par <strong>{{ post.author_username }}</strong></span>
+            <span class="dot">•</span>
+            <span>{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
           </div>
-          <div class="header-actions">
+        </header>
+
+        <div class="post-body" v-html="post.content"></div>
+
+        <div class="post-footer">
           <button
             v-if="authStore.user && post && authStore.user.id === post.user_id"
             @click="deletePost"
@@ -84,16 +88,10 @@ onMounted(async () => {
             Supprimer le sujet
           </button>
         </div>
-        </div>
-        </div>
-
-      </header>
-      
-      <div class="post-body" v-html="post.content"></div>
-      
-      <hr class="separator">
+      </article>
 
       <section class="comments-section">
+        <hr class="separator" />
         <CommentList 
           :comments="comments" 
           @comment-deleted="handleCommentDeleted" 
@@ -103,61 +101,139 @@ onMounted(async () => {
           @comment-created="handleCommentCreated" 
         />
       </section>
-    </article>
+    </div>
   </div>
 </template>
 
+
 <style scoped>
-.post-detail-view{
-  width: 100vw;
-  max-width: 800px;
+:root {
+  --primary-color: #3e81f5;
+  --primary-color-dark: #2a61c4;
+  --danger-color: #e74c3c;
+  --danger-color-dark: #c0392b;
+  --text-color: #333;
+  --text-muted: #6c757d;
+  --bg-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --border-color: #dee2e6;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --font-family: 'Inter', 'Segoe UI', sans-serif;
 }
+
+.post-detail-view {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  font-family: var(--font-family);
+}
+
+.post-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+  gap: 2rem;
+  min-height: 100vh;
+}
+
+.post-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
 .post-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 1rem;
-  gap: 1rem;
 }
-.post-header h1 {
-  margin: 0;
+
+.post-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin: 0 0 0.5rem 0;
 }
-.post-warper{
-  display: flex;
-  justify-content: space-between;
-}
+
 .post-meta {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--secondary-color);
+  display: flex;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  align-items: center;
 }
-.author {
+
+.post-meta .dot {
   font-weight: bold;
 }
+
+.post-body {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-color);
+  white-space: pre-wrap;
+}
+
+.post-footer {
+  margin-top: 2rem;
+  text-align: right;
+}
+
 .delete-post-button {
-  background-color: #dc3545;
+  background: var(--danger-color);
   color: white;
   border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 5px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: bold;
-  white-space: nowrap;
+  transition: background 0.3s ease;
 }
+
 .delete-post-button:hover {
-  background-color: #c82333;
+  background: var(--danger-color-dark);
 }
-.post-body {
-  line-height: 1.6;
-  font-size: 1.1rem;
-  white-space: pre-wrap; 
+
+/* Comments section */
+.comments-section {
+  margin-top: 2rem;
 }
+
 .separator {
-  border: 0;
+  border: none;
   border-top: 1px solid var(--border-color);
-  margin: 3rem 0;
+  margin: 2rem 0;
 }
-.loading-state, .error-message {
+
+/* Loading and error states */
+.loading-state,
+.error-message {
   text-align: center;
-  padding: 3rem;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  padding: 4rem 2rem;
+}
+
+.error-message {
+  color: var(--danger-color);
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+  .post-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .post-title {
+    font-size: 1.5rem;
+  }
+
+  .post-footer {
+    text-align: left;
+  }
 }
 </style>
