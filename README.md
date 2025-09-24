@@ -130,7 +130,7 @@ code Bash
 
         
     npm run dev # ou `yarn dev` si vous avez configuré un script `dev`
-    # Si non, la commande standard est `npm start` (ou `yarn start`)
+    # Si non, la commande standard est `npm start` (ou `yarn start`) ou encore node server.js (veuillez à avoir nodeJS v22)
 
       
 
