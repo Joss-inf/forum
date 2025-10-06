@@ -8,14 +8,19 @@ export interface User {
   role: 'admin' | 'moderator' | 'user'; //Ajout ici
 }
 
+export interface Tag {
+  id: number;
+  name: string;
+}
 // Décrit la structure d'un post, notamment pour la liste du forum
 export interface Post {
   id: number;
   title: string;
-  content: string; // Le contenu complet, si on va sur la page de détail
+  content: string;
+  tag_name: string;
   user_id: number;
-  created_at: string; // Les dates sont des chaînes de caractères en JSON
-  author_username: string; // Le nom de l'auteur joint par l'API
+  created_at: string; 
+  author_username: string; 
 }
 
 // Pour les formulaires de connexion et d'inscription

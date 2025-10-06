@@ -32,7 +32,6 @@ router.put(
 
 router.delete('/:id', authMiddleware, postController.deletePost);
 
-
 // Routes imbriquées pour les commentaires d'un post
 router.get('/:postId/comments', commentController.getCommentsForPost);
 

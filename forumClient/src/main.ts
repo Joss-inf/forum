@@ -7,7 +7,6 @@ import { useAuthStore } from '@/stores/auth';
 const app = createApp(App);
 const pinia = createPinia();
 
-// Enregistrez Pinia avant de l'utiliser
 app.use(pinia);
 const authStore = useAuthStore();
 

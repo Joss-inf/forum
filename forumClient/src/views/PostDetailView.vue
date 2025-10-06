@@ -65,7 +65,6 @@ onMounted(async () => {
   <div class="post-detail-view">
     <div v-if="isLoading" class="loading-state">Chargement...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
-
     <div v-else-if="post" class="post-wrapper">
       <article class="post-card">
         <header class="post-header">
@@ -74,6 +73,7 @@ onMounted(async () => {
             <span>Par <strong>{{ post.author_username }}</strong></span>
             <span class="dot">•</span>
             <span>{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
+            <span>{{ post.tag_name }}</span>
           </div>
         </header>
 
@@ -92,14 +92,16 @@ onMounted(async () => {
 
       <section class="comments-section">
         <hr class="separator" />
-        <CommentList 
+        <CommentList
           :comments="comments" 
           @comment-deleted="handleCommentDeleted" 
         />
         <CreateCommentForm 
-          :post-id="postId" 
+          v-if="authStore.user"
+          :post-id="postId"
           @comment-created="handleCommentCreated" 
         />
+        <div v-else class="comment-warning">Connectez vous pour poster un commentaire.</div>
       </section>
     </div>
   </div>
@@ -140,8 +142,9 @@ onMounted(async () => {
   background: white;
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 2.5rem 2rem;
+  padding: 1.0rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  
 }
 
 .post-header {
@@ -220,7 +223,10 @@ onMounted(async () => {
   color: var(--danger-color);
   font-weight: 500;
 }
-
+.warning{
+  color: var(--danger-color);
+  font-weight: 500;
+}
 /* Responsive */
 @media (max-width: 768px) {
 

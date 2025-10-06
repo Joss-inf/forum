@@ -1,4 +1,4 @@
-<script setup lang="ts" vapor>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import apiClient from '@/services/apiClient';
@@ -7,212 +7,235 @@ import type { Post } from '@/types';
 import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();
+
+// État
 const posts: Ref<Post[]> = ref([]);
-const isLoading: Ref<boolean> = ref(true);
+const isLoading: Ref<boolean> = ref(false);
 const error: Ref<string | null> = ref(null);
 const isCreating: Ref<boolean> = ref(false);
+const searchQuery: Ref<string> = ref('');
 
-function handlePostCreated(newPost: Post) {
-  // On ajoute le nouveau post au début de la liste pour un retour visuel immédiat !
-  posts.value.unshift(newPost);
-  // On cache le formulaire
-  isCreating.value = false;
-}
-onMounted(async () => {
+// Pagination cursor-based
+const postsPerPage = 10;
+const lastCursorCreatedAt: Ref<string | null> = ref(null);
+const lastCursorId: Ref<number | null> = ref(null);
+const hasMorePosts: Ref<boolean> = ref(true);
+
+// --- Fonctions ---
+async function fetchPosts(reset = false) {
+  if (isLoading.value) return;
+
+  isLoading.value = true;
+  error.value = null;
+
   try {
-    const response = await apiClient.get<Post[]>('/posts');
-    posts.value = response.data;
+    const params: any = { limit: postsPerPage };
+    if (!reset && lastCursorCreatedAt.value && lastCursorId.value) {
+      params.cursorCreatedAt = lastCursorCreatedAt.value;
+      params.cursorId = lastCursorId.value;
+    }
+    if (searchQuery.value) params.titleSearch = searchQuery.value;
+
+    const response = await apiClient.get('/posts', { params });
+
+    const newPosts: Post[] = response.data.posts; // <-- tableau réel
+    const more: boolean = response.data.hasMore;   // <-- indicateur de pagination
+
+    if (reset) posts.value = newPosts;
+    else posts.value.push(...newPosts);
+
+    // Mettre à jour le curseur pour la prochaine page
+    hasMorePosts.value = more;
+    if (newPosts.length > 0) {
+      const lastPost = newPosts[newPosts.length - 1];
+      lastCursorCreatedAt.value = lastPost.created_at;
+      lastCursorId.value = lastPost.id;
+    }
   } catch (err) {
-    error.value = "Impossible de charger les posts. Veuillez réessayer plus tard.";
+    error.value = 'Impossible de charger les posts.';
     console.error(err);
   } finally {
     isLoading.value = false;
   }
+}
+
+onMounted(async () => {
+  await fetchPosts();
 });
+
+
+async function handleSearch() {
+  // On reset la pagination
+  lastCursorCreatedAt.value = null;
+  lastCursorId.value = null;
+  hasMorePosts.value = true;
+  await fetchPosts(true);
+}
+
+function handlePostCreated(newPost: Post) {
+  // Ajouter le nouveau post en tête
+  posts.value.unshift(newPost);
+  isCreating.value = false;
+}
 </script>
 
 <template>
-  <div>
+  <div class="forum-container">
+    <!-- Barre de recherche et bouton créer -->
     <div class="forum-header">
-      <h1>Forum</h1>
-      <!-- 3. Le bouton pour basculer l'affichage du formulaire -->
-      <button
-        v-if="authStore.user"
-        @click="isCreating = !isCreating"
-        class="create-button"
-      >
+      <div class="search-container">
+        <input type="text" placeholder="Rechercher un post..." v-model="searchQuery" class="search-bar" />
+        <button :disabled="!searchQuery" class="search-button" @click="handleSearch">
+          Rechercher
+        </button>
+      </div>
+
+      <button v-if="authStore.user" class="create-button" @click="isCreating = !isCreating">
         {{ isCreating ? 'Annuler' : 'Créer un post' }}
       </button>
     </div>
 
-    <!-- 4. On affiche le formulaire si isCreating est true -->
-    <!-- On écoute l'événement 'post-created' -->
+    <!-- Formulaire de création -->
     <CreatePostForm v-if="isCreating" @post-created="handlePostCreated" />
 
-    <div v-if="isLoading" class="loading-state">Chargement des discussions...</div>
+    <!-- États -->
+    <div v-if="isLoading && posts.length === 0" class="loading-state">Chargement des discussions...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
-          
-<!-- ... dans la partie <template> ... -->
-<ul v-else-if="posts.length > 0" class="post-list">
-  <!-- On retire la balise <li> et on la remplace par RouterLink -->
-  <RouterLink 
-    v-for="post in posts" 
-    :key="post.id" 
-    :to="{ name: 'post-detail', params: { id: post.id } }"
-    class="post-item-link"
-  >
-    <li class="post-item">
-      <div class="post-header">
-        <h2 class="post-title">{{ post.title }}</h2>
-        <div class="post-meta">
-          Par <span class="author">{{ post.author_username }}</span>
-          le <span class="date">{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
-        </div>
-      </div>
-    </li>
-  </RouterLink>
-</ul>
-    <div v-else class="empty-state">
-      <p>Aucun post n'a été trouvé. Soyez le premier à en créer un !</p>
+    <div v-else-if="posts.length === 0" class="empty-state">
+      Aucun post n'a été trouvé. Soyez le premier à en créer un !
+    </div>
+
+    <!-- Liste de posts -->
+    <ul v-else class="post-list">
+      <RouterLink
+        v-for="post in posts"
+        :key="post.id"
+        :to="{ name: 'post-detail', params: { id: post.id } }"
+        class="post-item-link"
+      >
+        <li class="post-item">
+          <div class="post-header">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <div class="post-meta">
+              Le <span class="date">{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
+              Par <span class="author">{{ post.author_username }}</span>
+            </div>
+          </div>
+          <div class = 'tag-name'>{{ post.tag_name }}</div>
+        </li>
+      </RouterLink>
+    </ul>
+
+    <!-- Bouton "Charger plus" -->
+    <div v-if="hasMorePosts && !isLoading" class="load-more-container">
+      <button @click="fetchPosts()" class="load-more-button">Charger plus</button>
+    </div>
+
+    <!-- Loading lors du "Charger plus" -->
+    <div v-if="isLoading && posts.length > 0" class="loading-more">
+      Chargement...
     </div>
   </div>
-  
 </template>
 
 <style scoped>
-:root {
-  --primary-color: #4a90e2; /* Un bleu moderne et apaisant */
-  --primary-color-dark: #357ABD;
-  --secondary-color: #555;
-  --text-color-light: #777;
-  --bg-color: #f5f7fa; /* Un fond gris très clair, presque blanc */
-  --card-bg-color: #fff;
-  --border-color: #e3e8ee;
-  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
-  --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.1);
-  --font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+.forum-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  min-height: 100vh;
 }
 
-/* Styles globaux pour une meilleure esthétique */
-body {
-  font-family: var(--font-family);
-  background-color: var(--bg-color);
-  color: var(--secondary-color);
-  margin: 0;
-  padding: 2rem;
-}
-template{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-/* En-tête du forum */
 .forum-header {
-  margin-top: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  background: white;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  margin: 100px auto 2.5rem auto;
-  max-width: 1000px;
+  margin-bottom: 1.5rem;
+  height: 150px;
 }
 
-.forum-header h1 {
-  font-size: 2.0rem;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
-  padding-left: 10px;
+.search-container {
+  display: flex;
+  gap: 0.5rem;
 }
 
-/* Bouton pour créer un post */
-.create-button {
-  padding: 0.75rem 1.5rem;
+.search-bar {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  flex: 1;
+}
+
+.search-button, .create-button, .load-more-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   border: none;
-  background-color: var(--primary-color);
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
-  height: 55px;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 600;
 }
 
-.create-button:hover {
-  background-color: white;
-  color: var(--primary-color);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(74, 144, 226, 0.5);
+.search-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
 }
 
-/* États de chargement et d'erreur */
-.loading-state, .empty-state, .error-message {
-  text-align: center;
-  padding: 3rem;
-  color: var(--text-color-light);
-  font-size: 1.1rem;
-}
-
-.error-message {
-  color: #e74c3c;
-  font-weight: 500;
-}
-
-/* Liste des posts */
 .post-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .post-item-link {
   text-decoration: none;
   color: inherit;
-  max-width: 1000px;
-  width: 100%;
 }
 
-/* Style de chaque élément de post */
 .post-item {
-  background-color: white;
-  padding: 2rem;
-  margin-bottom: 0.1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  padding: 1rem;
+  background-color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .post-item:hover {
-  transform: translateY(-5px);
-
-}
-
-/* Contenu du post */
-.post-header {
-  display: flex;
-  flex-direction: column;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .post-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--primary-color);
-  margin: 0 0 0.5rem 0;
+  margin: 0;
 }
 
 .post-meta {
-  font-size: 0.9rem;
-  color: var(--text-color-light);
+  font-size: 0.85rem;
+  color: #6b7280;
 }
 
 .author {
   font-weight: 600;
-  color: var(--secondary-color);
+}
+.tag-name {
+  display: flex;
+  background: #000000b8;
+  width: fit-content;
+  color: white;
+  padding: 2px 8px;
+  font-weight: bold;
+  border-radius: 50px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+}
+.load-more-container {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.loading-state, .loading-more, .error-message, .empty-state {
+  text-align: center;
+  margin: 1rem 0;
+  color: #6b7280;
 }
 </style>

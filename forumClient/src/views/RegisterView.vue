@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import type { Ref } from 'vue';
+import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import SideContentRegister from '@/components/SideContentRegister.vue';
+import { useAuthValidation } from '@/composables/useAuthValidation';
+
 
 // Initialisation des stores et du routeur
 const authStore = useAuthStore();
@@ -12,118 +14,31 @@ const router = useRouter();
 const form = ref({
   username: '',
   email: '',
-  confirmEmail: '', // Nouveau champ
-  password: '',
-  confirmPassword: '' // Nouveau champ
-});
-
-// Erreur de l'API (backend)
-const apiError: Ref<string | null> = ref(null);
-
-// Erreurs de validation côté client
-const validationErrors = ref({
-  username: '',
-  email: '',
   confirmEmail: '',
   password: '',
   confirmPassword: ''
 });
 
-// --- Fonctions de validation ---
+// Utilisation du composable de validation
+const {
+  validationErrors,
+  validateUsername,
+  validateEmail,
+  validateConfirmEmail,
+  validatePassword,
+  validateConfirmPassword,
+  validateAllFields,
+  isFormValid
+} = useAuthValidation(form);
 
-// Valide le nom d'utilisateur
-const validateUsername = () => {
-  if (!form.value.username) {
-    validationErrors.value.username = 'Le pseudo est requis.';
-  } else if (form.value.username.length < 3 || form.value.username.length > 64) {
-    validationErrors.value.username = 'Le pseudo doit contenir entre 3 et 64 caractères.';
-  } else {
-    validationErrors.value.username = '';
-  }
-};
-
-// Valide l'email
-const validateEmail = () => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!form.value.email) {
-    validationErrors.value.email = "L'email est requis.";
-  } else if (!emailRegex.test(form.value.email)) {
-    validationErrors.value.email = "Le format de l'email est invalide.";
-  } else if (form.value.email.length > 64) {
-    validationErrors.value.email = "L'email ne doit pas dépasser 64 caractères.";
-  } else {
-    validationErrors.value.email = '';
-  }
-  // Re-valide confirmEmail si l'email change
-  validateConfirmEmail();
-};
-
-// Valide la confirmation d'email
-const validateConfirmEmail = () => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!form.value.confirmEmail) {
-    validationErrors.value.confirmEmail = "La confirmation d'email est requise.";
-  } else if (!emailRegex.test(form.value.confirmEmail)) {
-    validationErrors.value.confirmEmail = "Le format de l'email de confirmation est invalide.";
-  } else if (form.value.confirmEmail !== form.value.email) {
-    validationErrors.value.confirmEmail = 'Les adresses email ne correspondent pas.';
-  } else {
-    validationErrors.value.confirmEmail = '';
-  }
-};
-
-// Valide le mot de passe
-const validatePassword = () => {
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])/;
-  if (!form.value.password) {
-    validationErrors.value.password = 'Le mot de passe est requis.';
-  } else if (form.value.password.length < 8 || form.value.password.length > 256) {
-    validationErrors.value.password = 'Le mot de passe doit contenir entre 8 et 256 caractères.';
-  } else if (!passwordRegex.test(form.value.password)) {
-    validationErrors.value.password = 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un caractère spécial (!@#$%^&*).';
-  } else {
-    validationErrors.value.password = '';
-  }
-  // Re-valide confirmPassword si le mot de passe change
-  validateConfirmPassword();
-};
-
-// Valide la confirmation du mot de passe
-const validateConfirmPassword = () => {
-  if (!form.value.confirmPassword) {
-    validationErrors.value.confirmPassword = 'La confirmation du mot de passe est requise.';
-  } else if (form.value.confirmPassword !== form.value.password) {
-    validationErrors.value.confirmPassword = 'Les mots de passe ne correspondent pas.';
-  } else {
-    validationErrors.value.confirmPassword = '';
-  }
-};
-
-// Vérifie si le formulaire est globalement valide
-const isFormValid = computed(() => {
-  // Exécute toutes les validations pour s'assurer que toutes les erreurs sont mises à jour
-  validateUsername();
-  validateEmail();
-  validateConfirmEmail();
-  validatePassword();
-  validateConfirmPassword();
-
-  // Vérifie si toutes les chaînes d'erreur sont vides
-  return Object.values(validationErrors.value).every(error => error === '');
-});
+// Erreur de l'API
+const apiError = ref<string | null>(null);
 
 // --- Gestion de l'inscription ---
 async function handleRegister() {
-  apiError.value = null; // Réinitialise les erreurs de l'API
+  apiError.value = null;
+  validateAllFields();
 
-  // Exécute toutes les validations avant de soumettre
-  validateUsername();
-  validateEmail();
-  validateConfirmEmail();
-  validatePassword();
-  validateConfirmPassword();
-
-  // Si le formulaire n'est pas valide, arrête la soumission
   if (!isFormValid.value) {
     return;
   }
@@ -132,53 +47,90 @@ async function handleRegister() {
     await authStore.register(form.value);
     await router.push('/login');
   } catch (err: any) {
-    // Gère les erreurs renvoyées par l'API (par ex. utilisateur déjà existant)
     apiError.value = err.response?.data?.message || 'Une erreur est survenue lors de l\'inscription.';
   }
 }
 </script>
 
 <template>
-  <div class="auth-form-container">
-    <form @submit.prevent="handleRegister" class="auth-form">
-      <h1>Inscription</h1>
+  <div class="register-wrapper">
+    <SideContentRegister />
+    <div class="auth-form-container">
+      <form @submit.prevent="handleRegister" class="auth-form">
+        <h1>Inscription</h1>
 
-      <div class="form-group">
-        <label for="username">Nom d'utilisateur</label>
-        <input type="text" id="username" v-model="form.username" @blur="validateUsername" required autocomplete="username">
-        <p v-if="validationErrors.username" class="error-message">{{ validationErrors.username }}</p>
-      </div>
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur</label>
+          <input
+            type="text"
+            id="username"
+            v-model="form.username"
+            @blur="validateUsername"
+            required
+            autocomplete="username"
+          />
+          <p v-if="validationErrors.username" class="error-message">{{ validationErrors.username }}</p>
+        </div>
 
-      <div class="form-group">
-        <label for="email">Adresse Email</label>
-        <input type="email" id="email" v-model="form.email" @blur="validateEmail" required autocomplete="email">
-        <p v-if="validationErrors.email" class="error-message">{{ validationErrors.email }}</p>
-      </div>
+        <div class="form-group">
+          <label for="email">Adresse Email</label>
+          <input
+            type="email"
+            id="email"
+            v-model="form.email"
+            @blur="validateEmail"
+            required
+            autocomplete="email"
+          />
+          <p v-if="validationErrors.email" class="error-message">{{ validationErrors.email }}</p>
+        </div>
 
-      <div class="form-group">
-        <label for="confirmEmail">Confirmer l'Adresse Email</label>
-        <input type="email" id="confirmEmail" v-model="form.confirmEmail" @blur="validateConfirmEmail" required autocomplete="email">
-        <p v-if="validationErrors.confirmEmail" class="error-message">{{ validationErrors.confirmEmail }}</p>
-      </div>
+        <div class="form-group">
+          <label for="confirmEmail">Confirmer l'Adresse Email</label>
+          <input
+            type="email"
+            id="confirmEmail"
+            v-model="form.confirmEmail"
+            @blur="validateConfirmEmail"
+            required
+            autocomplete="email"
+          />
+          <p v-if="validationErrors.confirmEmail" class="error-message">{{ validationErrors.confirmEmail }}</p>
+        </div>
 
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input type="password" id="password" v-model="form.password" @blur="validatePassword" required autocomplete="new-password">
-        <p v-if="validationErrors.password" class="error-message">{{ validationErrors.password }}</p>
-      </div>
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            v-model="form.password"
+            @blur="validatePassword"
+            required
+            autocomplete="new-password"
+          />
+          <p v-if="validationErrors.password" class="error-message">{{ validationErrors.password }}</p>
+        </div>
 
-      <div class="form-group">
-        <label for="confirmPassword">Confirmer le Mot de passe</label>
-        <input type="password" id="confirmPassword" v-model="form.confirmPassword" @blur="validateConfirmPassword" required autocomplete="new-password">
-        <p v-if="validationErrors.confirmPassword" class="error-message">{{ validationErrors.confirmPassword }}</p>
-      </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirmer le Mot de passe</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            v-model="form.confirmPassword"
+            @blur="validateConfirmPassword"
+            required
+            autocomplete="new-password"
+          />
+          <p v-if="validationErrors.confirmPassword" class="error-message">{{ validationErrors.confirmPassword }}</p>
+        </div>
 
-      <p v-if="apiError" class="error-message">{{ apiError }}</p>
-      
-      <button type="submit" class="submit-button" :disabled="!isFormValid ">S'inscrire</button>
-    </form>
+        <p v-if="apiError" class="error-message">{{ apiError }}</p>
+        <button type="submit" class="submit-button" :disabled="!isFormValid">S'inscrire</button>
+      </form>
+    </div>
   </div>
 </template>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap');
@@ -197,7 +149,13 @@ async function handleRegister() {
   --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15);
   --error-color: #e74c3c;
 }
-
+.register-wrapper{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-self: center;
+  flex-direction: row-reverse;
+}
 .auth-form-container {
   font-family: 'Poppins', 'Inter', sans-serif;
   background: var(--bg-color);
@@ -206,9 +164,11 @@ async function handleRegister() {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  min-width: 50vw;
   padding: 2rem;
   box-sizing: border-box;
   animation: fadeInBackground 1.5s ease-out forwards;
+  order: 1;
 }
 
 @keyframes fadeInBackground {
@@ -225,7 +185,7 @@ async function handleRegister() {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   animation: slideIn 0.8s ease-out forwards;
-  width: 100%;
+  width: 100vw;
   max-width: 440px;
 }
 
@@ -243,7 +203,9 @@ async function handleRegister() {
   text-align: center;
   letter-spacing: 1px;
 }
-
+.form-group{
+  height: 100px;
+}
 .form-group label {
   display: block;
   font-size: 0.95rem;
@@ -253,7 +215,7 @@ async function handleRegister() {
 
 .form-group input {
   width: 100%;
-  padding: 0.5rem 0rem;
+  padding: 1rem 1.2rem;
   border: 1px solid var(--border-color);
   background-color: var(--input-bg-color);
   font-size: 1rem;

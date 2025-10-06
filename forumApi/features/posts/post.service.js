@@ -14,6 +14,7 @@ export async function createPost(postData) {
 
 export async function getAllPosts(options = {}) {
   return PostModel.findAll(options);
+  
 }
 
 export async function getPostById(postId) {
@@ -22,12 +23,8 @@ export async function getPostById(postId) {
   return post;
 }
 
-export async function getCommentsByPostId(postId) {
-  return  CommentModel.findByPostId(postId);
-}
-
 export async function updateUserPost({ postId, userId, postUpdates }) {
-  const post = await PostModel.findById(postId);
+  const post = await PostModel.findPostById(postId);
   if (!post) throw new NotFoundError('Post non trouvé.');
   if (post.user_id !== userId ) throw new AuthorizationError('Vous n\'êtes pas autorisé à modifier ce post.');
   const updatedPost = await PostModel.update(postId, postUpdates);
@@ -35,11 +32,14 @@ export async function updateUserPost({ postId, userId, postUpdates }) {
 }
 
 export async function deleteUserPost({ postId, userId, userRole }) {
-  const post = await PostModel.findById(postId);
+  const post = await PostModel.findPostById(postId);
   if (!post) throw new NotFoundError('Post non trouvé.');
   if (hasPrivilege(post.user_id,userId,userRole)) {
     await PostModel.remove(postId);
   } else {
     throw new AuthorizationError('Vous n\'êtes pas autorisé à effectuer cette action.');
   }
+}
+export async function getCommentsByPostId(postId) {
+  return  CommentModel.findPostById(postId);
 }

@@ -1,6 +1,7 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useLoadingStore } from '@/stores/loader';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,7 +9,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue')
+      component: () => import('../views/HomeView.vue'),
+      meta: { requiresAuth: false } 
     },
     {
       path: '/login',
@@ -32,19 +34,19 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true}
     },
     {
       path: '/posts/:id',
       name: 'post-detail',
       component: () => import('../views/PostDetailView.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
     path: '/unauthorized',
     name: 'unauthorized',
     component: () => import('../views/UnauthorizedView.vue'),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: false }
     }
   ]
 });
@@ -57,18 +59,20 @@ const router = createRouter({
  */
 
 
+const GuestPages = new Set(['login', 'register']);
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const requiresAuth = to.meta.requiresAuth;
   const allowedRoles = to.meta.roles;
   const isAuthenticated = authStore.isAuthenticated;
-  const userRole = authStore.user?.role; // Assure-toi que `authStore.user` contient un `role`
+  const userRole = authStore.user?.role; 
+  const name:string = to.name as string;
 
   if (requiresAuth && !isAuthenticated) {
     next({ name: 'login' });
   } 
-  else if ((to.name === 'login' || to.name === 'register') && isAuthenticated) {
+  else if (GuestPages.has(name) && isAuthenticated) {
     next({ name: 'forum' });
   } 
   else if (
@@ -76,11 +80,25 @@ router.beforeEach((to, from, next) => {
     Array.isArray(allowedRoles) &&
     !allowedRoles.includes(userRole)
   ) {
-    next({ name: 'unauthorized' }); // Rediriger vers une page 403
+    useLoadingStore().isPageLoading = true;
+    next({ name: 'unauthorized' }); 
   } 
   else {
+    useLoadingStore().isPageLoading = true;
     next();
   }
+});
+
+/**
+ * Garde de navigation globale.
+ * Elle s'exécute après chaque changement de route.
+ */
+router.afterEach(() => {
+  const loadingStore = useLoadingStore();
+    setTimeout(() => {
+      loadingStore.isPageLoading = false;
+    }, 100);
+
 });
 
 export default router;

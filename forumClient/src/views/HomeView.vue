@@ -226,68 +226,6 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-
-      <!-- Footer Section -->
-      <footer class="main-footer">
-      <div class="footer-container container">
-        <!-- À propos -->
-        <div class="footer-section">
-          <h4>À propos</h4>
-          <p>
-            VueSphere est une plateforme communautaire dédiée aux développeurs Vue.js. Rejoignez notre forum, partagez vos idées, et progressez avec nous.
-          </p>
-        </div>
-
-        <!-- Liens rapides -->
-        <div class="footer-section">
-          <h4>Navigation</h4>
-          <ul>
-            <li><RouterLink to="/">Accueil</RouterLink></li>
-            <li><RouterLink to="/forum">Forum</RouterLink></li>
-            <li><RouterLink to="/about">À propos</RouterLink></li>
-            <li><RouterLink to="/contact">Contact</RouterLink></li>
-          </ul>
-        </div>
-
-        <!-- Mentions légales -->
-        <div class="footer-section">
-          <h4>Légal</h4>
-          <ul>
-            <li><RouterLink to="/privacy">Politique de confidentialité</RouterLink></li>
-            <li><RouterLink to="/terms">Conditions d'utilisation</RouterLink></li>
-            <li><RouterLink to="/cookies">Politique de cookies</RouterLink></li>
-          </ul>
-        </div>
-
-        <!-- Contact -->
-        <div class="footer-section">
-          <h4>Contact</h4>
-          <ul>
-            <li>Email : <a href="mailto:support@vuesphere.com">support@vuesphere.com</a></li>
-            <li>Téléphone : +33 1 23 45 67 89</li>
-            <li>Adresse : 123 Rue Vue, Paris, France</li>
-          </ul>
-        </div>
-
-        <!-- Réseaux sociaux -->
-        <div class="footer-bottom">
-          <div class="social-links">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-              <!-- GitHub SVG -->
-              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12C0 17.387 3.438 21.868 8.205 23.479C8.799 23.585 9.027 23.224 9.027 22.925C9.027 22.656 9.017 21.751 9.014 20.812C5.602 21.503 4.862 19.336 4.862 19.336C4.301 17.915 3.518 17.551 3.518 17.551C2.449 16.819 3.593 16.833 3.593 16.833C4.787 16.912 5.419 17.949 5.419 17.949C6.467 19.712 8.172 19.227 8.943 18.948C9.049 18.239 9.331 17.763 9.641 17.502C6.913 17.202 4.053 16.142 4.053 11.411C4.053 10.117 4.501 9.046 5.234 8.196C5.101 7.892 4.708 6.772 5.337 5.176C5.337 5.176 6.307 4.863 9.006 6.711C9.919 6.463 10.877 6.339 11.838 6.339C12.799 6.339 13.757 6.463 14.67 6.711C17.369 4.863 18.339 5.176 18.339 5.176C18.968 6.772 18.575 7.892 18.442 8.196C19.175 9.046 19.623 10.117 19.623 11.411C19.623 16.153 16.759 17.209 14.022 17.50C14.477 17.899 14.896 18.667 14.896 19.866C14.896 21.571 14.881 22.915 14.881 23.224C14.881 23.526 15.106 23.882 15.707 23.775C20.477 22.169 23.913 17.689 23.913 12C24 5.373 18.627 0 12 0Z"/></svg>
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-              <!-- Twitter SVG -->
-              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.46 6C21.687 6.356 20.865 6.591 20 6.685C20.889 6.168 21.572 5.334 21.898 4.318C21.052 4.809 20.106 5.161 19.102 5.352C18.271 4.453 17.075 4 15.766 4C13.292 4 11.278 6.014 11.278 8.488C11.278 8.847 11.317 9.199 11.393 9.539C7.579 9.358 4.254 7.558 2.072 4.79C1.676 5.487 1.444 6.31 1.444 7.182C1.444 8.799 2.278 10.219 3.524 11.054C2.766 11.029 2.052 10.828 1.447 10.495C1.447 10.511 1.447 10.526 1.447 10.542C1.447 12.761 3.067 14.625 5.176 15.04C4.789 15.146 4.387 15.201 3.978 15.201C3.693 15.201 3.417 15.183 3.149 15.127C3.725 16.942 5.429 18.257 7.429 18.295C5.876 19.46 3.931 20.158 1.838 20.158C1.488 20.158 1.144 20.138 0.803 20.096C2.859 21.439 5.239 22.158 7.78 22.158C15.753 22.158 20.147 15.539 20.147 9.873C20.147 9.689 20.143 9.508 20.135 9.328C20.985 8.724 21.728 8.01 22.46 7.182V6Z"/></svg>
-            </a>
-            <!-- Ajoutez d'autres icônes sociales ici -->
-          </div>
-          <p class="copyright">
-            &copy; {{ new Date().getFullYear() }} VueSphere. Tous droits réservés.
-          </p>
-        </div>
-      </div>
-    </footer>
     </main>
   </div>
 </template>
@@ -650,7 +588,7 @@ strong {
   align-items: center;
   padding-top: 8rem; /* Espace pour le header */
   padding-bottom: 4rem;
-  background: linear-gradient(135deg, #e0f2f7, #fcfcfc); /* Fond clair et moderne */
+  background: linear-gradient(135deg, #bdf0fe, #e1ffdf);; /* Fond clair et moderne */
   position: relative;
   overflow: hidden;
 }
@@ -713,9 +651,10 @@ strong {
 /* Features Section (Revisitée) */
 .features-section {
   padding: 8rem 0;
-  background-color: var(--bg-light); /* Fond clair pour cette section */
+  background: linear-gradient(65deg, #bdf0fe, #e1ffdf);; /* Fond clair pour cette section */
   position: relative;
   overflow: hidden;
+
 }
 
 .features-section .container {
@@ -824,7 +763,7 @@ strong {
 /* Call to Action Final Section */
 .cta-final-section {
   padding: 8rem 0;
-  background: radial-gradient(circle,rgb(109, 204, 124) 0%, rgb(202, 223, 212) 50%, rgb(217, 225, 225) 57%, rgb(222, 226, 230) 89%);
+  background: linear-gradient(138deg, #bdf0fe, #e1ffdf);
   text-align: center;
   position: relative;
   height: 100vh;
@@ -850,87 +789,6 @@ strong {
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
-}
-
-/* Footer Section */
-.main-footer {
-  background-color: gr;
-  color: var(--text-color-light);
-  padding: 4rem 0 2rem;
-  font-size: 0.9rem;
-}
-
-.footer-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.footer-section {
-  flex: 1 1 200px;
-  min-width: 200px;
-}
-
-.footer-section h4 {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  color: #fff;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.footer-section ul li {
-  margin-bottom: 0.5rem;
-}
-
-.footer-section a {
-  color: var(--text-muted);
-  text-decoration: none;
-}
-
-.footer-section a:hover {
-  color: var(--text-color-light);
-  text-decoration: underline;
-}
-
-.footer-bottom {
-  width: 100%;
-  margin-top: 3rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding-top: 1.5rem;
-  text-align: center;
-}
-
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.social-links svg {
-  width: 24px;
-  height: 24px;
-  fill: var(--text-muted);
-  transition: transform 0.3s ease, fill 0.3s ease;
-}
-
-.social-links a:hover svg {
-  transform: translateY(-3px);
-  fill: #00c6ff;
-}
-
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
 }
 
 /* Animations au scroll (Intersection Observer) */
@@ -1198,17 +1056,6 @@ strong {
   /* CTA Section */
   .cta-title {
     font-size: 2rem;
-  }
-
-  /* Footer Section */
-  .footer-content {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .footer-links, .social-links {
-    flex-wrap: wrap;
-    justify-content: center;
   }
 }
 

@@ -2,12 +2,12 @@ import db from '../../config/database.js';
 import withTransaction from '../../utils/withTransaction.js'
 import * as queries from './post.queries.js'
 
-export async function create({ title, content, userId }) {
-  const { rows } = await db.query(queries.insertPost(title, content, userId));
+export async function create({ title, content, userId, tagId }) {
+  const { rows } = await db.query(queries.insertPost(title, content, userId, tagId));
   return rows[0];
 }
 
-export async function findById(id) {
+export async function findPostById(id) {
   const { rows } = await db.query(queries.selectPostById(id));
   return rows[0];
 }
@@ -17,46 +17,21 @@ export async function findByIdWithAuthor(id) {
   return rows[0];
 }
 
-export async function findAll(options = {}) {
-  const limit = Math.min(parseInt(options.limit, 10) || 10, 50);
-  const cursor = options.cursor ? parseInt(options.cursor, 10) : null;
+export async function findAll({ limit = 10, cursorCreatedAt = null, cursorId = null, tag = null, titleSearch = null, order = 'DESC' } = {}) {
+  const finalLimit = Math.min(Number.isInteger(Number(limit)) ? Number(limit) : 10, 50);
 
-  let query;
-  let params;
+  const { rows } = await db.query(queries.selectAllPosts({
+      cursorCreatedAt, cursorId, limit: finalLimit, tag, titleSearch, order
+    }));
 
-  if (cursor) {
-    // Pagination avec curseur (posts avec un id < cursor)
-    query = `
-      SELECT 
-        p.id, p.user_id, p.title, p.created_at, 
-        u.username AS author_username
-      FROM posts p
-      JOIN users u ON p.user_id = u.id
-      WHERE p.id < $1
-      ORDER BY p.id DESC
-      LIMIT $2;
-    `;
-    params = [cursor, limit];
-  } else {
-    // Première page
-    query = `
-      SELECT 
-        p.id, p.user_id, p.title, p.created_at, 
-        u.username AS author_username
-      FROM posts p
-      JOIN users u ON p.user_id = u.id
-      ORDER BY p.id DESC
-      LIMIT $1;
-    `;
-    params = [limit];
-  }
-
-  const { rows } = await db.query(query, params);
-  return rows;
+  const hasMore = rows.length === finalLimit;
+  return { posts: rows, hasMore };
 }
+
 
 export async function update(id, { title, content }) {
   return withTransaction(async (client) => {
+
     const existing = await client.query(queries.selectPostIdForUpdate(id));
     if (existing.rowCount === 0) throw new Error('Post not found');
 
