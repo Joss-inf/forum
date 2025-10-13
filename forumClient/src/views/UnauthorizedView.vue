@@ -1,7 +1,8 @@
 <!-- src/views/UnauthorizedView.vue -->
 <template>
   <div class="error-page">
-    <div class="error-container">
+    <!-- On utilise la classe .card de notre layout pour la base -->
+    <div class="card error-container">
       <h1>403 - Accès Refusé</h1>
       <p>Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
       <RouterLink to="/" class="home-link">Retourner à l'accueil</RouterLink>
@@ -10,45 +11,44 @@
 </template>
 
 <style scoped>
+/* Le CSS est maintenant beaucoup plus léger et utilise nos variables de design */
+
 .error-page {
   display: grid;
   place-items: center;
   min-height: 80vh;
-  text-align: center;
-  background-color: #f8fafc;
-  padding: 1rem;
+  padding: var(--space-md);
+  /* Le fond est déjà géré par le style global du body, pas besoin de le redéfinir */
 }
 
 .error-container {
   max-width: 500px;
-  padding: 3rem 2rem;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  border-top: 4px solid #f97316; /* Orange pour un avertissement de permission */
+  text-align: center;
+  /* La classe .card gère déjà le fond, le padding, l'ombre et le border-radius. */
+  /* On ajoute seulement ce qui est spécifique à cette carte : */
+  border-top: 4px solid var(--color-warning);
 }
 
 h1 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2rem;
-  color: #1e293b;
-  margin-bottom: 1rem;
+  /* La police est déjà gérée par le style global */
+  font-size: 1.75rem;
+  color: var(--color-text-headings);
+  margin-bottom: var(--space-md);
 }
 
 p {
-  color: #64748b;
-  margin-bottom: 2rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
 }
 
 .home-link {
-  display: inline-block;
   font-weight: 600;
-  color: #0ea5e9;
+  color: var(--color-secondary); /* Utilise la couleur bleue de notre système */
   text-decoration: none;
-  transition: opacity 0.2s ease;
+  transition: var(--transition-smooth);
 }
 
 .home-link:hover {
-  opacity: 0.8;
+  text-decoration: underline; /* Plus accessible et standard qu'un changement d'opacité */
 }
 </style>

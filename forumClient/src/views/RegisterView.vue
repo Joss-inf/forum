@@ -5,7 +5,6 @@ import { useRouter } from 'vue-router';
 import { useAuthValidation } from '@/composables/useAuthValidation';
 import BaseInput from '@/components/BaseInput.vue'
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
-import SideContentRegister from '@/components/SideContentRegister.vue';
 
 // Initialisation des stores et du routeur
 const authStore = useAuthStore();
@@ -55,7 +54,6 @@ async function handleRegister() {
 
 <template>
   <div class="register-wrapper">
-    <SideContentRegister />
     <div class="auth-form-container">
       <form @submit.prevent="handleRegister" class="auth-form">
         <h1>Inscription</h1>
@@ -127,131 +125,98 @@ async function handleRegister() {
 
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap');
-
-:root {
-  --primary-color: #6a11cb;
-  --primary-color-dark: #2575fc;
-  --secondary-color: #2c3e50;
-  --text-color: #333;
-  --text-color-light: #7f8c8d;
-  --bg-color: linear-gradient(to right, #6a11cb, #2575fc);
-  --card-bg-color: #fff;
-  --border-color: #e0e6ed;
-  --input-bg-color: #f0f0f0;
-  --shadow-light: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15);
-  --error-color: #e74c3c;
-}
-.register-wrapper{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-self: center;
-  flex-direction: row-reverse;
-}
-.auth-form-container {
-  font-family: 'Poppins', 'Inter', sans-serif;
-  background: var(--bg-color);
-  color: var(--text-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.auth-layout {
+  display: grid;
+  /* Sur grand écran, on a une grille 50/50 */
+  grid-template-columns: 1fr 1fr;
   min-height: 100vh;
-  min-width: 50vw;
-  padding: 2rem;
-  box-sizing: border-box;
-  animation: fadeInBackground 1.5s ease-out forwards;
-  order: 1;
 }
 
-@keyframes fadeInBackground {
-  from { background-position: 0% 50%; opacity: 0.8; }
-  to { background-position: 100% 50%; opacity: 1; }
+.register-wrapper {
+  /* Style pour le conteneur de gauche */
+  /* C'est à SideContentRegister de gérer son propre style interne */
+  background-color: var(--color-background-alt); /* Un fond subtil */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  min-height: 100vh;
 }
 
-
+.auth-form-container {
+  display: grid;
+  place-items: center;
+  padding: var(--space-xl);
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+  background-color: var(--color-background);
+}
 
 .auth-form {
-  background-color: var(--card-bg-color);
-  padding: 3rem 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  animation: slideIn 0.8s ease-out forwards;
-  width: 100vw;
+  width: 100%;
   max-width: 440px;
+  /* On enlève la bordure et l'ombre pour un look plus plat qui s'intègre mieux */
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
 }
 
-@keyframes slideIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.auth-form h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  margin:0;
-  margin-bottom: 0.5rem;
+h1 {
+  font-size: 2rem;
   text-align: center;
-  letter-spacing: 1px;
+  margin-bottom: var(--space-xs);
+}
+
+.form-subtitle {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
 }
 
 .submit-button {
   width: 100%;
-  padding: 1.1rem;
-  border: none;
-  border-radius: 10px;
-  background: #e0e6ed;
-  color: #7f8c8d;
-  font-size: 1.15rem;
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  font-size: 1.1rem;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: var(--space-lg);
+  font-size: 0.95rem;
+}
+
+.auth-link a {
+  color: var(--color-secondary);
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  margin-top: 1rem;
-  border-radius: 100px;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+.auth-link a:hover {
+  text-decoration: underline;
 }
 
-.submit-button:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  transform: translateY(-3px);
-}
-
-.submit-button:disabled {
-  background-color: #ccc;
-  color: #999;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .auth-form {
-    padding: 2.5rem 1.5rem;
-    border-radius: 12px;
+/* --- Responsive --- */
+@media (max-width: 992px) {
+  .auth-layout {
+    /* Sur petit écran, on passe à une seule colonne */
+    grid-template-columns: 1fr;
+  }
+  
+  .side-content-container {
+    /* On peut choisir de le cacher sur mobile... */
+    display: none; 
+    
+    /* ...OU de le mettre au-dessus (plus moderne) */
+    /* Pour cela, décommentez la ligne ci-dessous et ajustez sa hauteur */
+    /* order: -1; min-height: 300px; */
   }
 
-  .auth-form h1 {
-    font-size: 2rem;
-  }
-
-  .form-group label,
-  .form-group input,
-  .submit-button,
-  .error-message {
-    font-size: 0.9rem;
-  }
-
-  .submit-button {
-    padding: 0.9rem;
-  }
-
-  .auth-form-container{
-    padding: 1rem;
+  .auth-form-container {
+    /* Le formulaire prend toute la largeur */
+    padding: var(--space-lg);
   }
 }
 </style>

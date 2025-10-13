@@ -1,7 +1,8 @@
 <!-- src/views/NotFoundView.vue -->
 <template>
   <div class="error-page">
-    <div class="error-container">
+    <!-- On utilise la classe .card pour la base, simplifiant le CSS -->
+    <div class="card error-container">
       <h1>404 - Page Introuvable</h1>
       <p>Oups ! La page que vous cherchez n'existe pas ou a été déplacée.</p>
       <RouterLink to="/" class="home-link">Retourner à l'accueil</RouterLink>
@@ -10,46 +11,48 @@
 </template>
 
 <style scoped>
-/* On utilise les mêmes styles que la page 403 pour la cohérence */
+/*
+ * ==========================================================================
+ *  CSS REFACTORISÉ AVEC LE SYSTÈME DE DESIGN
+ * ==========================================================================
+ */
+
 .error-page {
   display: grid;
   place-items: center;
   min-height: 80vh;
-  text-align: center;
-  background-color: #f8fafc;
-  padding: 1rem;
+  padding: var(--space-md);
+  /* Le fond est déjà géré globalement par le body */
 }
 
 .error-container {
   max-width: 500px;
-  padding: 3rem 2rem;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  border-top: 4px solid #f43f5e; /* Rouge pour une erreur 404 */
+  text-align: center;
+  /* La classe .card gère déjà fond, padding, ombre, bordure et radius */
+  /* On ajoute seulement la bordure colorée spécifique */
+  border-top: 4px solid var(--color-danger);
 }
 
 h1 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2rem;
-  color: #1e293b;
-  margin-bottom: 1rem;
+  /* La police est déjà gérée globalement */
+  font-size: 1.75rem;
+  color: var(--color-text-headings);
+  margin-bottom: var(--space-md);
 }
 
 p {
-  color: #64748b;
-  margin-bottom: 2rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
 }
 
 .home-link {
-  display: inline-block;
   font-weight: 600;
-  color: #0ea5e9;
+  color: var(--color-secondary); /* Utilise la couleur bleue de notre système */
   text-decoration: none;
-  transition: opacity 0.2s ease;
+  transition: var(--transition-smooth);
 }
 
 .home-link:hover {
-  opacity: 0.8;
+  text-decoration: underline;
 }
 </style>

@@ -1,97 +1,168 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* src/assets/css/main.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap');
+/*
+ * ==========================================================================
+ *  1. SYSTÈME DE DESIGN (TOKENS)
+ * ==========================================================================
+ *  Ceci est la "source de vérité" pour tout le style de l'application.
+ *  Modifier une variable ici impactera l'ensemble du site.
+ */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  /* --------------------
+   *  1. RÔLES DE COULEUR (Color Roles)
+   *  Palette basée sur un bleu sophistiqué.
+   * -------------------- */
+  /* Primaire */
+  --md-sys-color-primary: hsl(210, 80%, 55%);
+  --md-sys-color-on-primary: hsl(0, 0%, 100%);
+  --md-sys-color-primary-container: hsl(210, 80%, 90%);
+  --md-sys-color-on-primary-container: hsl(210, 80%, 25%);
+  /* Secondaire */
+  --md-sys-color-secondary: hsl(260, 45%, 60%);
+  --md-sys-color-on-secondary: hsl(0, 0%, 100%);
+  --md-sys-color-secondary-container: hsl(260, 45%, 92%);
+  --md-sys-color-on-secondary-container: hsl(260, 45%, 25%);
+  /* Erreur */
+  --md-sys-color-error: hsl(0, 70%, 60%);
+  --md-sys-color-on-error: hsl(0, 0%, 100%);
+  --md-sys-color-error-container: hsl(0, 70%, 95%);
+  --md-sys-color-on-error-container: hsl(0, 70%, 30%);
+  /* Surface (Fonds) */
+  --md-sys-color-surface-dim: hsl(210, 20%, 92%);
+  --md-sys-color-surface: hsl(210, 20%, 98%);
+  --md-sys-color-surface-bright: hsl(0, 0%, 100%);
+  --md-sys-color-surface-container-lowest: hsl(0, 0%, 100%);
+  --md-sys-color-surface-container-low: hsl(210, 20%, 96%);
+  --md-sys-color-surface-container: hsl(210, 20%, 94%);
+  --md-sys-color-surface-container-high: hsl(210, 20%, 92%);
+  --md-sys-color-surface-container-highest: hsl(210, 20%, 88%);
+  /* Texte & Icônes (sur les surfaces) */
+  --md-sys-color-on-surface: hsl(210, 15%, 20%);
+  --md-sys-color-on-surface-variant: hsl(210, 10%, 40%);
+  /* Bordures */
+  --md-sys-color-outline: hsl(210, 15%, 85%);
+  --md-sys-color-outline-variant: hsl(210, 15%, 75%);
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  /* --------------------
+   *  2. ÉCHELLE TYPOGRAPHIQUE (Type Scale)
+   * -------------------- */
+  --md-sys-typescale-font-family: 'Poppins', 'Inter', sans-serif;
+  /* Display */
+  --md-sys-typescale-display-large-size: 57px;
+  /* Headline */
+  --md-sys-typescale-headline-large-size: 32px;
+  --md-sys-typescale-headline-medium-size: 28px;
+  /* Title */
+  --md-sys-typescale-title-large-size: 22px;
+  --md-sys-typescale-title-medium-size: 16px;
+  --color-text-headings: hsl(215, 28%, 17%); /* Noir doux */
+  --font-family-headings: 'Poppins', var(--font-family-sans);
+  /* Body */
+  --md-sys-typescale-body-large-size: 16px;
+  --md-sys-typescale-body-medium-size: 14px;
+  /* Label */
+  --md-sys-typescale-label-large-size: 14px;
+  --md-sys-typescale-label-medium-size: 12px;
 
-  --vt-c-indigo: #2c3e50;
+  /* --------------------
+   *  3. FORME (Shape)
+   * -------------------- */
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 999px;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  /* --------------------
+   *  4. ÉTATS (States)
+   * -------------------- */
+  --md-sys-state-hover-state-layer-opacity: 0.08;
+  --md-sys-state-focus-state-layer-opacity: 0.12;
+  --md-sys-state-pressed-state-layer-opacity: 0.12;
+  
+  /* --------------------
+   *  5. TRANSITIONS
+   * -------------------- */
+  --md-sys-motion-easing-standard: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --md-sys-motion-duration-medium: 250ms;
 }
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
-
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
-
-  --section-gap: 160px;
-
-
-  --primary-color: #4a90e2; /* Un bleu moderne et apaisant */
-  --primary-color-dark: #357ABD;
-  --secondary-color: #555;
-  --text-color-light: #777;
-  --bg-color: #f5f7fa; /* Un fond gris très clair, presque blanc */
-  --card-bg-color: #fff;
-  --border-color: #e3e8ee;
-  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
-  --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
-
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
-}
-
-*,
-*::before,
-*::after {
+/*
+ * ==========================================================================
+ *  STYLES GLOBAUX & RESET
+ * ==========================================================================
+ */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
-  font-weight: normal;
+  padding: 0;
+}
+
+body {
+  font-family: var(--md-sys-typescale-font-family);
+  font-size: var(--md-sys-typescale-body-large-size);
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 { color: var(--md-sys-color-on-surface); line-height: 1.2; }
+h1 { font-size: var(--md-sys-typescale-headline-large-size); }
+h2 { font-size: var(--md-sys-typescale-headline-medium-size); }
+h3 { font-size: var(--md-sys-typescale-title-large-size); }
+h4 { font-size: var(--md-sys-typescale-title-medium-size); }
+
+
+/*
+ * ==========================================================================
+ *  2. RESET CSS & STYLES GLOBAUX
+ * ==========================================================================
+ *  Assure un comportement cohérent sur tous les navigateurs.
+ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-weight: normal; /* Assure une base neutre pour le poids de la police */
 }
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
+  font-family: 'Poppins';
+  font-size: 16px; /* Taille de base plus standard */
+  color: var(--color-text-body);
+  background-color: var(--color-background-body);
   line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
-  font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-headings);
+  color: var(--color-text-headings);
+  line-height: 1.2;
+}
+
+/*
+ * ==========================================================================
+ *  3. CLASSES UTILITAIRES DE LAYOUT
+ * ==========================================================================
+ *  Classes réutilisables pour la mise en page.
+ */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+}
+
+.card {
+  background-color: var(--color-background-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
 }

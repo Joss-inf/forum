@@ -1,6 +1,6 @@
 <template>
   <footer class="main-footer">
-    <div class="footer-container container">
+    <div class="footer-container">
       <div class="footer-section about-section">
         <h4>À propos</h4>
         <p>
