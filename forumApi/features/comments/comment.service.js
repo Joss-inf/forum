@@ -6,6 +6,7 @@ export async function createComment(commentData) {
   const postExists = await PostModel.findPostById(commentData.postId);
   if (!postExists) throw new NotFoundError('Le post que vous essayez de commenter n\'existe pas.');
   const newComment = await CommentModel.create(commentData);
+
   return newComment;
 }
 

@@ -52,10 +52,7 @@ export async function loginUser(credentials, res) {
 
   setAuthCookie(res,jwtToken)
   setCsrfCookie(res,csrf.signed)
-  
-  return {
-    user: user.id,
-  };
+
 }
 
 export async function logoutUser(userId, res){

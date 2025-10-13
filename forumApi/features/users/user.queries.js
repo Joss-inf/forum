@@ -11,7 +11,7 @@ export const selectUserByEmailOrUsername = (email, username) => ({
 export const selectUserById = (id) => ({
   name: 'select-user-by-id',
   text: `
-    SELECT id, username, email, created_at
+    SELECT id, username, email,role, created_at
     FROM users
     WHERE id = $1;
   `,

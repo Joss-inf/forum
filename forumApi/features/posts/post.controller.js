@@ -46,7 +46,6 @@ export async function getPostById(req, res, next) {
   try {
     const postId = req.params.id;
     const post = await PostService.getPostById(postId);
-    console.log(post)
     res.status(200).json(post);
   } catch (error) {
     next(error);

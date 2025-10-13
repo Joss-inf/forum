@@ -4,9 +4,20 @@
 export const insertComment = (content, userId, postId) => ({
   name: 'insert-comment',
   text: `
-    INSERT INTO comments (content, user_id, post_id)
-    VALUES ($1, $2, $3)
-    RETURNING *;
+    WITH inserted_comment AS (
+      INSERT INTO comments (content, user_id, post_id)
+      VALUES ($1, $2, $3)
+      RETURNING *
+    )
+    SELECT 
+      inserted_comment.id AS id,
+      inserted_comment.content as content,
+      users.username as author_username,
+      users.id as user_id,
+      inserted_comment.created_at,
+      inserted_comment.updated_at
+    FROM inserted_comment
+    JOIN users ON users.id = inserted_comment.user_id;
   `,
   values: [content, userId, postId],
 });

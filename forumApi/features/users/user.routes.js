@@ -7,7 +7,7 @@ const router = Router();
 
 router
 .get('/me', authMiddleware, userController.getMe)
-.get('/:id', authMiddleware,userController.getUserById)
+.get('/:id', authMiddleware,csrfMiddleware, userController.getUserById)
 .put('/profile', authMiddleware,csrfMiddleware, userController.updateProfile)
 
 export default router;

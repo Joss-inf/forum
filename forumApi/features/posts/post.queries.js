@@ -18,7 +18,7 @@ export const selectPostById = (id) => ({
     SELECT p.id, p.user_id, p.title, t.name AS tag_name, p.content, p.created_at
     FROM posts p
     JOIN tags t ON p.tag_id = t.id
-    WHERE id = $1;
+    WHERE p.id = $1;
   `,
   values: [id],
 });
@@ -50,7 +50,7 @@ export const selectAllPosts = ({
   const orderDir = order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
 
   return {
-    name: 'select-all-posts',
+    name: `select-all-posts-${orderDir}`,
     text: `
       SELECT 
         p.id,
@@ -70,11 +70,11 @@ export const selectAllPosts = ({
       LIMIT $5;
     `,
     values: [
-      cursorCreatedAt || null,
-      cursorId || null,
-      tag || null,
-      titleSearch || null,
-      limit || 10
+      cursorCreatedAt ,
+      cursorId,
+      tag ,
+      titleSearch ,
+      limit 
     ],
   };
 };
