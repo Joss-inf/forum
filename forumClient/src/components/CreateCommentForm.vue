@@ -1,85 +1,65 @@
+<!-- src/components/CreateCommentForm.vue -->
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Ref } from 'vue';
-import apiClient from '@/services/apiClient';
+// 1. Importer la constante
+import { useCommentSubmit, COMMENT_MAX_LENGTH } from '@/composables/useCommentSubmit';
 import type { Comment } from '@/types';
+import BaseInput from '@/components/BaseInput.vue';
+import BaseButton from '@/components/BaseButton.vue';
+import BaseMessageAlert from '@/components/BaseMessageAlert.vue';
 
-const props = defineProps<{
-  postId: number
-}>();
+const props = defineProps<{postId: number}>();
+const emit = defineEmits<{(e: 'comment-created', comment: Comment): void}>();
 
-const emit = defineEmits<{
-  (e: 'comment-created', comment: Comment): void
-}>();
-
-const content: Ref<string> = ref('');
-const isLoading: Ref<boolean> = ref(false);
-const error: Ref<string | null> = ref(null);
-
-async function handleSubmit() {
-  if (!content.value.trim()) return;
-
-  isLoading.value = true;
-  error.value = null;
-
-  try {
-    const response = await apiClient.post<Comment>(`/posts/${props.postId}/comments`, {
-      content: content.value
-    });
-    emit('comment-created', response.data);
-    content.value = ''; // Vider le formulaire
-  } catch (err: any) {
-    error.value = err.response?.data?.message || "Erreur lors de l'envoi du commentaire.";
-  } finally {
-    isLoading.value = false;
-  }
-}
+const { content, isLoading, error, submitComment } = useCommentSubmit({
+  postId: props.postId,
+  onSuccess: (comment) => emit('comment-created', comment),
+});
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="comment-form">
-    <h4>Ajouter un commentaire</h4>
-    <textarea 
+  <form @submit.prevent="submitComment" class="comment-form">
+    <h4 class="form-title">Laisser un commentaire</h4>
+    
+    <!-- 2. Utiliser la prop maxlength -->
+    <BaseInput
+      id="comment-content"
+      type="textarea"
       v-model="content"
-      rows="3"
-      placeholder="Votre commentaire..."
-      required
-    ></textarea>
-    <p v-if="error" class="error-message">{{ error }}</p>
-    <button type="submit" :disabled="isLoading">
-      {{ isLoading ? 'Envoi...' : 'Envoyer' }}
-    </button>
+      placeholder="Partagez vos pensées, questions ou solutions..."
+      :rows="4"
+      :maxlength="COMMENT_MAX_LENGTH"
+    />
+    
+    <BaseMessageAlert v-if="error" :text="error" type="error" />
+    
+    <div class="form-actions">
+      <button type="submit" :disabled="isLoading">
+        {{ isLoading ? 'Envoi...' : 'Envoyer' }}
+      </button>
+    </div>
   </form>
 </template>
 
 <style scoped>
+/* 3. "Un petit CSS en plus" */
 .comment-form {
   margin-top: 2rem;
-  background-color: #f8f9fa;
   padding: 1.5rem;
-  border-radius: 8px;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0 0 12px 12px; /* Arrondir seulement le bas pour s'intégrer */
 }
-textarea {
-  min-width: 100%;
-  max-width: 100%;
-  padding: 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-family: inherit;
-  margin-bottom: 1rem;
 
+.form-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 1rem;
 }
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--primary-color);
-  color: white;
-  cursor: pointer;
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end; /* Aligner le bouton à droite */
+  margin-top: 1rem;
 }
-button:disabled {
-  background-color: var(--secondary-color);
-}
-.error-message { color: #dc3545; }
 </style>

@@ -1,48 +1,7 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'; // Garde RouterView au cas où
-import { ref, onMounted, onUnmounted } from 'vue';
-
-const scrolled = ref(false);
-
-const handleScroll = () => {
-  scrolled.value = window.scrollY > 50; 
-};
-
-// Intersection Observer pour les animations au scroll
-const setupIntersectionObserver = () => {
-  const revealElements = document.querySelectorAll('.reveal-item');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-revealed');
-        // observer.unobserve(entry.target); // Optionnel: pour n'animer qu'une seule fois
-      } else {
-        // Optionnel: pour réinitialiser l'animation quand l'élément sort du viewport
-        // entry.target.classList.remove('is-revealed');
-      }
-    });
-  }, {
-    threshold: 0.1, // Se déclenche quand 10% de l'élément est visible
-    rootMargin: '0px 0px -10% 0px' // Réduit la zone de déclenchement pour une meilleure UX
-  });
-
-  revealElements.forEach(el => observer.observe(el));
-  return observer; // Retourne l'observateur pour pouvoir le déconnecter
-};
-
-let observerInstance: IntersectionObserver | null = null; // Type explicitement pour TS
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-  observerInstance = setupIntersectionObserver();
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-  if (observerInstance) {
-    observerInstance.disconnect();
-  }
-});
+import { RouterLink } from 'vue-router'; 
+import { useScrollEffects } from '@/composables/useScrollEffects';
+useScrollEffects();
 </script>
 
 <template>

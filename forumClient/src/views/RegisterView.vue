@@ -2,9 +2,10 @@
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
-import SideContentRegister from '@/components/SideContentRegister.vue';
 import { useAuthValidation } from '@/composables/useAuthValidation';
-
+import BaseInput from '@/components/BaseInput.vue'
+import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
+import SideContentRegister from '@/components/SideContentRegister.vue';
 
 // Initialisation des stores et du routeur
 const authStore = useAuthStore();
@@ -32,11 +33,11 @@ const {
 } = useAuthValidation(form);
 
 // Erreur de l'API
-const apiError = ref<string | null>(null);
+const error = ref<string | null>(null);
 
 // --- Gestion de l'inscription ---
 async function handleRegister() {
-  apiError.value = null;
+  error.value = null;
   validateAllFields();
 
   if (!isFormValid.value) {
@@ -47,7 +48,7 @@ async function handleRegister() {
     await authStore.register(form.value);
     await router.push('/login');
   } catch (err: any) {
-    apiError.value = err.response?.data?.message || 'Une erreur est survenue lors de l\'inscription.';
+    error.value = err.response?.data?.message || 'Une erreur est survenue lors de l\'inscription.';
   }
 }
 </script>
@@ -59,77 +60,70 @@ async function handleRegister() {
       <form @submit.prevent="handleRegister" class="auth-form">
         <h1>Inscription</h1>
 
-        <div class="form-group">
-          <label for="username">Nom d'utilisateur</label>
-          <input
-            type="text"
-            id="username"
-            v-model="form.username"
-            @blur="validateUsername"
-            required
-            autocomplete="username"
-          />
-          <p v-if="validationErrors.username" class="error-message">{{ validationErrors.username }}</p>
-        </div>
+        <BaseInput
+          id="username"
+          label="Nom d'utilisateur"
+          type="text"
+          v-model="form.username"
+          :error="validationErrors.username"
+          required
+          autocomplete="username"
+          @blur="validateUsername"
+        />
 
-        <div class="form-group">
-          <label for="email">Adresse Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="form.email"
-            @blur="validateEmail"
-            required
-            autocomplete="email"
-          />
-          <p v-if="validationErrors.email" class="error-message">{{ validationErrors.email }}</p>
-        </div>
+        <BaseInput
+          id="email"
+          label="Adresse Email"
+          type="email"
+          v-model="form.email"
+          :error="validationErrors.email"
+          required
+          autocomplete="email"
+          @blur="validateEmail"
+        />
 
-        <div class="form-group">
-          <label for="confirmEmail">Confirmer l'Adresse Email</label>
-          <input
-            type="email"
-            id="confirmEmail"
-            v-model="form.confirmEmail"
-            @blur="validateConfirmEmail"
-            required
-            autocomplete="email"
-          />
-          <p v-if="validationErrors.confirmEmail" class="error-message">{{ validationErrors.confirmEmail }}</p>
-        </div>
+        <BaseInput
+          id="confirmEmail"
+          label="Confirmer l'Adresse Email"
+          type="email"
+          v-model="form.confirmEmail"
+          :error="validationErrors.confirmEmail"
+          required
+          autocomplete="email"
+          @blur="validateConfirmEmail"
+        />
 
-        <div class="form-group">
-          <label for="password">Mot de passe</label>
-          <input
-            type="password"
-            id="password"
-            v-model="form.password"
-            @blur="validatePassword"
-            required
-            autocomplete="new-password"
-          />
-          <p v-if="validationErrors.password" class="error-message">{{ validationErrors.password }}</p>
-        </div>
+        <BaseInput
+          id="password"
+          label="Mot de passe"
+          type="password"
+          v-model="form.password"
+          :error="validationErrors.password"
+          required
+          autocomplete="new-password"
+          @blur="validatePassword"
+        />
 
-        <div class="form-group">
-          <label for="confirmPassword">Confirmer le Mot de passe</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            v-model="form.confirmPassword"
-            @blur="validateConfirmPassword"
-            required
-            autocomplete="new-password"
-          />
-          <p v-if="validationErrors.confirmPassword" class="error-message">{{ validationErrors.confirmPassword }}</p>
-        </div>
-
-        <p v-if="apiError" class="error-message">{{ apiError }}</p>
-        <button type="submit" class="submit-button" :disabled="!isFormValid">S'inscrire</button>
+        <BaseInput
+          id="confirmPassword"
+          label="Confirmer le Mot de passe"
+          type="password"
+          v-model="form.confirmPassword"
+          :error="validationErrors.confirmPassword"
+          required
+          autocomplete="new-password"
+          @blur="validateConfirmPassword"
+        />
+        <BaseMessageAlert :text="error" type="error" />
+        
+        <button type="submit" class="submit-button" :disabled="!isFormValid">
+          S'inscrire
+        </button>
       </form>
     </div>
   </div>
 </template>
+
 
 
 <style scoped>
@@ -202,52 +196,6 @@ async function handleRegister() {
   margin-bottom: 0.5rem;
   text-align: center;
   letter-spacing: 1px;
-}
-.form-group{
-  height: 100px;
-}
-.form-group label {
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--secondary-color);
-}
-
-.form-group input {
-  width: 100%;
-  padding: 1rem 1.2rem;
-  border: 1px solid var(--border-color);
-  background-color: var(--input-bg-color);
-  font-size: 1rem;
-  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
-  box-sizing: border-box;
-  border-radius: 10px;
-}
-
-.form-group input:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15);
-  background-color: #fff;
-}
-
-.form-group input::placeholder {
-  color: var(--text-color-light);
-  opacity: 0.6;
-}
-
-.error-message {
-  color: red;
-  border-radius: 8px;
-  margin-top: 0.1rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  animation: shake 0.5s ease-in-out;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
 }
 
 .submit-button {

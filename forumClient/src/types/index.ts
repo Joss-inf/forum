@@ -5,7 +5,7 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  role: 'admin' | 'moderator' | 'user'; //Ajout ici
+  role: 'admin' | 'moderator' | 'user'; 
 }
 
 export interface Tag {
@@ -40,4 +40,13 @@ export interface Comment {
   post_id: number;
   created_at: string;
   author_username: string;
+}
+
+export interface Params {
+  limit: number;
+  order: 'ASC' | 'DESC';
+  cursorCreatedAt?: string;
+  cursorId?: number;
+  titleSearch?: string;
+  tag?: number;
 }

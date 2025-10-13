@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor >
 import { RouterView } from 'vue-router';
 import FooterEnd from './components/FooterEnd.vue';
-import HeaderStart from './components/HeaderStart.vue';
+import HeaderStart from './components/ForumHeader.vue';
 </script>
 
 <template>

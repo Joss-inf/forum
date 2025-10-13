@@ -1,106 +1,57 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import type { Ref } from 'vue';
-import apiClient from '@/services/apiClient';
-import CreatePostForm from '@/components/CreatePostForm.vue';
+<!-- src/views/ForumView.vue -->
+<script setup lang="ts"> 
+import { ref } from 'vue';
+import { usePosts } from '@/composables/usePosts';
 import type { Post } from '@/types';
 import { useAuthStore } from '@/stores/auth';
+import CreatePostForm from '@/components/CreatePostForm.vue';
+import ForumMenu from '@/components/ForumMenu.vue';
+import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
+
 
 const authStore = useAuthStore();
+const isCreating = ref(false);
 
-// État
-const posts: Ref<Post[]> = ref([]);
-const isLoading: Ref<boolean> = ref(false);
-const error: Ref<string | null> = ref(null);
-const isCreating: Ref<boolean> = ref(false);
-const searchQuery: Ref<string> = ref('');
-
-// Pagination cursor-based
-const postsPerPage = 10;
-const lastCursorCreatedAt: Ref<string | null> = ref(null);
-const lastCursorId: Ref<number | null> = ref(null);
-const hasMorePosts: Ref<boolean> = ref(true);
-
-// --- Fonctions ---
-async function fetchPosts(reset = false) {
-  if (isLoading.value) return;
-
-  isLoading.value = true;
-  error.value = null;
-
-  try {
-    const params: any = { limit: postsPerPage };
-    if (!reset && lastCursorCreatedAt.value && lastCursorId.value) {
-      params.cursorCreatedAt = lastCursorCreatedAt.value;
-      params.cursorId = lastCursorId.value;
-    }
-    if (searchQuery.value) params.titleSearch = searchQuery.value;
-
-    const response = await apiClient.get('/posts', { params });
-
-    const newPosts: Post[] = response.data.posts; // <-- tableau réel
-    const more: boolean = response.data.hasMore;   // <-- indicateur de pagination
-
-    if (reset) posts.value = newPosts;
-    else posts.value.push(...newPosts);
-
-    // Mettre à jour le curseur pour la prochaine page
-    hasMorePosts.value = more;
-    if (newPosts.length > 0) {
-      const lastPost = newPosts[newPosts.length - 1];
-      lastCursorCreatedAt.value = lastPost.created_at;
-      lastCursorId.value = lastPost.id;
-    }
-  } catch (err) {
-    error.value = 'Impossible de charger les posts.';
-    console.error(err);
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-onMounted(async () => {
-  await fetchPosts();
-});
-
-
-async function handleSearch() {
-  // On reset la pagination
-  lastCursorCreatedAt.value = null;
-  lastCursorId.value = null;
-  hasMorePosts.value = true;
-  await fetchPosts(true);
-}
+const {
+  posts,
+  isLoading,
+  error,
+  searchQuery,
+  selectedTag, // <-- Récupérer les nouvelles refs
+  sortOrder,
+  availableTags,
+  hasMorePosts,
+  fetchPosts,
+  handleSearch
+} = usePosts();
 
 function handlePostCreated(newPost: Post) {
-  // Ajouter le nouveau post en tête
   posts.value.unshift(newPost);
   isCreating.value = false;
-}
+} 
 </script>
 
 <template>
   <div class="forum-container">
     <!-- Barre de recherche et bouton créer -->
-    <div class="forum-header">
-      <div class="search-container">
-        <input type="text" placeholder="Rechercher un post..." v-model="searchQuery" class="search-bar" />
-        <button :disabled="!searchQuery" class="search-button" @click="handleSearch">
-          Rechercher
-        </button>
-      </div>
+     <ForumMenu
+      v-model:searchQuery="searchQuery"
+      v-model:selectedTag="selectedTag"
+      v-model:sortOrder="sortOrder"
+      :available-tags="availableTags"
+      :is-authenticated="authStore.isAuthenticated"
+      :is-creating="isCreating"
+      @search="handleSearch"
+      @toggle-create="isCreating = !isCreating"
+    />
 
-      <button v-if="authStore.user" class="create-button" @click="isCreating = !isCreating">
-        {{ isCreating ? 'Annuler' : 'Créer un post' }}
-      </button>
-    </div>
 
     <!-- Formulaire de création -->
     <CreatePostForm v-if="isCreating" @post-created="handlePostCreated" />
 
     <!-- États -->
     <div v-if="isLoading && posts.length === 0" class="loading-state">Chargement des discussions...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
+     <BaseMessageAlert v-if="error" :text="error" type="error" />
     <div v-else-if="posts.length === 0" class="empty-state">
       Aucun post n'a été trouvé. Soyez le premier à en créer un !
     </div>
@@ -128,7 +79,7 @@ function handlePostCreated(newPost: Post) {
 
     <!-- Bouton "Charger plus" -->
     <div v-if="hasMorePosts && !isLoading" class="load-more-container">
-      <button @click="fetchPosts()" class="load-more-button">Charger plus</button>
+      <button @click="() => fetchPosts()" class="load-more-button">Charger plus</button>
     </div>
 
     <!-- Loading lors du "Charger plus" -->
@@ -139,19 +90,21 @@ function handlePostCreated(newPost: Post) {
 </template>
 
 <style scoped>
-.forum-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  min-height: 100vh;
-}
 
 .forum-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  height: 150px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-and-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-grow: 1;
 }
 
 .search-container {
@@ -160,25 +113,23 @@ function handlePostCreated(newPost: Post) {
 }
 
 .search-bar {
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  flex: 1;
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
 }
 
-.search-button, .create-button, .load-more-button {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: #3b82f6;
-  color: white;
-  font-weight: 600;
+.filter-container {
+  display: flex;
+  gap: 1rem;
 }
 
-.search-button:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
+.forum-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  min-height: 100vh;
 }
 
 .post-list {
@@ -197,6 +148,7 @@ function handlePostCreated(newPost: Post) {
   padding: 1rem;
   background-color: #fff;
   transition: transform 0.2s, box-shadow 0.2s;
+  overflow-wrap: break-word;
 }
 
 .post-item:hover {
@@ -233,7 +185,7 @@ function handlePostCreated(newPost: Post) {
   margin: 1rem 0;
 }
 
-.loading-state, .loading-more, .error-message, .empty-state {
+.loading-state, .loading-more, .empty-state {
   text-align: center;
   margin: 1rem 0;
   color: #6b7280;

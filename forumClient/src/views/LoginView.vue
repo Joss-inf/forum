@@ -3,6 +3,8 @@ import { nextTick, ref } from 'vue';
 import type { Ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import BaseInput from '@/components/BaseInput.vue'
+import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -27,35 +29,26 @@ async function handleLogin() {
       <form @submit.prevent="handleLogin" class="auth-form">
         <h1>Connexion</h1>
         <p class="subtitle">Connectez-vous pour accéder à votre espace.</p>
-
-        <div class="form-group">
-          <label for="email">Adresse Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="form.email"
-            required
-            autocomplete="email"
-            placeholder="votre.email@example.com"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Mot de passe</label>
-          <input
-            type="password"
-            id="password"
-            v-model="form.password"
-            required
-            autocomplete="current-password"
-            placeholder="********"
-          />
-        </div>
-
-        <p v-if="error" class="error-message">{{ error }}</p>
-
+        <BaseInput
+          id="email"
+          label="Adresse Email"
+          type="email"
+          v-model="form.email"
+          required
+          autocomplete="email"
+          placeholder="votre.email@example.com"
+        />
+        <BaseInput
+          id="password"
+          label="Mot de passe"
+          type="password"
+          v-model="form.password"
+          required
+          autocomplete="current-password"
+          placeholder="********"
+        />
+        <BaseMessageAlert :text="error" type="error" />
         <button type="submit" class="submit-button">Se connecter</button>
-
         <div class="form-links">
           <router-link to="/forgot-password">Mot de passe oublié ?</router-link>
           <router-link to="/register">S'inscrire</router-link>
@@ -64,6 +57,7 @@ async function handleLogin() {
     </div>
   </div>
 </template>
+
 
 <style scoped>
 /* Import des polices depuis Google Fonts */
@@ -154,37 +148,6 @@ async function handleLogin() {
   margin-bottom: 1.8rem; /* Plus d'espace entre les groupes */
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 0.8rem; /* Plus d'espace entre le label et l'input */
-  font-size: 0.95rem; /* Légèrement plus grand */
-  font-weight: 500; /* Moins gras que 600 pour un look plus doux */
-  color: var(--secondary-color);
-}
-
-/* Champ de saisie */
-.form-group input {
-  width: 100%;
-  padding: 1rem 1.2rem; /* Plus de padding pour une meilleure ergonomie */
-  border: 1px solid var(--border-color);
-  border-radius: 10px; /* Coins plus arrondis */
-  background-color: var(--input-bg-color);
-  font-size: 1rem;
-  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
-  box-sizing: border-box;
-}
-
-.form-group input::placeholder {
-  color: var(--text-color-light);
-  opacity: 0.6;
-}
-
-.form-group input:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15); /* Ombre douce au focus */
-  background-color: #fff; /* Fond blanc au focus pour un contraste */
-}
-
 /* Bouton de soumission */
 .submit-button {
   width: 100%;
@@ -210,26 +173,6 @@ async function handleLogin() {
 .submit-button:active {
   transform: translateY(0); /* Retour à la position normale */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Message d'erreur */
-.error-message {
-  color: var(--error-color);
-  background-color: #ffebee; /* Fond léger pour le message d'erreur */
-  border: 1px solid #ef9a9a;
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 500;
-  animation: shake 0.5s ease-in-out; /* Animation pour l'erreur */
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
 }
 
 /* Option "mot de passe oublié" et "s'inscrire" */
@@ -262,10 +205,7 @@ async function handleLogin() {
   .auth-form h1 {
     font-size: 2rem;
   }
-  .form-group label,
-  .form-group input,
   .submit-button,
-  .error-message,
   .form-links a {
     font-size: 0.9rem;
   }

@@ -1,6 +1,6 @@
 // src/store/auth.ts
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import type { Ref, ComputedRef } from 'vue';
 import apiClient from '@/services/apiClient'; // Assurez-vous que ce chemin est correct
 import router from '@/router'; // Assurez-vous que ce chemin est correct
@@ -24,7 +24,9 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await apiClient.get<User>('/users/me'); // Endpoint pour récupérer le profil de l'utilisateur connecté
       user.value = response.data;
-    } catch (error: any) {
+      console.log('User fetched:', user.value)
+
+    } catch (err: any){
       user.value = null;
       // Les route guards ou d'autres logiques peuvent gérer la redirection si nécessaire.
     }
@@ -35,9 +37,8 @@ export const useAuthStore = defineStore('auth', () => {
    */
   async function login(credentials: LoginCredentials) {
     try {
-      const response = await apiClient.post<{ user: User }>('/auth/login', credentials);
-      user.value = response.data.user; // Met à jour l'état de l'utilisateur après la connexion
-      console.log(user.value)
+      await apiClient.post<{ user: User }>('/auth/login', credentials);
+      await fetchUser();
     } catch (err: any) {
       throw err;
     }

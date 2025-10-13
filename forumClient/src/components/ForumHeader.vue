@@ -41,8 +41,7 @@ const isMenuOpen = ref(false);
 </template>
 <style lang="css" scoped>
 .app-header {
-  position: fixed;
-  top: 0;
+
   width: 100%;
   height: 60px;
   background-color: #fff;
@@ -131,6 +130,7 @@ const isMenuOpen = ref(false);
     opacity: 1;
     visibility: visible;
     padding: 1rem 0;
+    z-index: 100;
   }
 
   .nav-menu li {
