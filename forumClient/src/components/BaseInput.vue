@@ -143,16 +143,11 @@ function onBlur(event: FocusEvent) {
 </script>
 
 <style scoped>
-.form-group {
-  min-height: 100px;
-}
 
-/* NOUVEAU STYLE POUR LE LABEL ET LE COMPTEUR */
 .label-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 0.5rem;
 }
 
 .form-group label {
@@ -177,7 +172,9 @@ function onBlur(event: FocusEvent) {
 .form-group input,
 .form-group textarea,
 .form-group select {
-  width: 100%;
+  width:fill-available;
+  max-width: 100%;
+  min-width: 100%;
   padding: 0.9rem 1rem;
   border: 1px solid var(--border-color);
   background-color: var(--input-bg-color);

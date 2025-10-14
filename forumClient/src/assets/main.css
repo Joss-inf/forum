@@ -10,9 +10,20 @@
 /* Conteneur principal */
 .container {
   width: 100%;
-  max-width: 1200px;
-  min-height: 100vh;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 24px;
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+}
+button:active  {
+  filter: brightness(0.9);
+;
+}
+
+.card {
+  background-color: var(--color-background-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
 }

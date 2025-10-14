@@ -57,26 +57,23 @@ function handlePostCreated(newPost: Post) {
     </div>
 
     <!-- Liste de posts -->
-    <ul v-else class="post-list">
-      <RouterLink
-        v-for="post in posts"
-        :key="post.id"
-        :to="{ name: 'post-detail', params: { id: post.id } }"
-        class="post-item-link"
-      >
-        <li class="post-item">
-          <div class="post-header">
-            <h2 class="post-title">{{ post.title }}</h2>
-            <div class="post-meta">
-              Le <span class="date">{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
-              Par <span class="author">{{ post.author_username }}</span>
-            </div>
-          </div>
-          <div class = 'tag-name'>{{ post.tag_name }}</div>
-        </li>
-      </RouterLink>
-    </ul>
-
+    <ul class="post-list">
+  <li v-for="post in posts" :key="post.id" class="post-item">
+    <RouterLink
+      :to="{ name: 'post-detail', params: { id: post.id } }"
+      class="post-item-link"
+    >
+      <div class="post-header">
+        <h2 class="post-title">{{ post.title }}</h2>
+        <div class="post-meta">
+          Le <span class="date">{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
+          Par <span class="author">{{ post.author_username }}</span>
+        </div>
+      </div>
+      <div class="tag-name">{{ post.tag_name }}</div>
+    </RouterLink>
+  </li>
+</ul>
     <!-- Bouton "Charger plus" -->
     <div v-if="hasMorePosts && !isLoading" class="load-more-container">
       <button @click="() => fetchPosts()" class="load-more-button">Charger plus</button>
@@ -90,7 +87,9 @@ function handlePostCreated(newPost: Post) {
 </template>
 
 <style scoped>
-
+.post-item:last-child {
+  border-radius: 0px 0px 30px 30px;
+}
 .forum-header {
   display: flex;
   justify-content: space-between;
@@ -127,7 +126,7 @@ function handlePostCreated(newPost: Post) {
 
 .forum-container {
   max-width: 800px;
-  margin: 2rem auto;
+  margin: 0.5rem auto;
   padding: 0 1rem;
   min-height: 100vh;
 }
@@ -170,15 +169,16 @@ function handlePostCreated(newPost: Post) {
 }
 .tag-name {
   display: flex;
-  background: #000000b8;
+  background: #0000000d;
   width: fit-content;
   color: white;
   padding: 2px 8px;
   font-weight: bold;
-  border-radius: 50px;
+  border-radius: 50px 50px 50px 0;
   justify-content: center;
   align-items: center;
   margin-top: 5px;
+  color: #515151;
 }
 .load-more-container {
   text-align: center;

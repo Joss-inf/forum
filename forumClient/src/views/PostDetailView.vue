@@ -37,9 +37,10 @@ const {
             <span class="dot">•</span>
             <span>{{ new Date(post.created_at).toLocaleDateString('fr-FR') }}</span>
             <span class="tag">{{ post.tag_name }}</span>
-            <button v-if="canDelete" @click="deletePost" class="delete-post-button">
-              Supprimer
-            </button>
+            <button v-if="canDelete" @click="deletePost" class="noselect"><span class="text">Supprimer</span>
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"></path></svg></span>
+          </button>
           </div>
         </header>
         <div class="post-body" v-html="post.content"></div>
@@ -67,172 +68,165 @@ const {
 
     
 <style scoped>
-/*
- * ==========================================================================
- *  DESIGN REFACTORISÉ POUR UNE EXPÉRIENCE PREMIUM
- * ==========================================================================
- */
-
 .post-detail-view {
-  /* On utilise la classe .container pour centrer et espacer le contenu */
-  max-width: 800px; /* Largeur idéale pour la lecture d'articles */
+  width: 100%;
+  max-width: 960px;
   margin: 0 auto;
-  padding: var(--space-xl) var(--space-lg);
+  font-family: var(--font-family);
 }
 
 .post-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  margin-top: 100px;
+  gap: 2rem;
+  min-height: 100vh;
 }
 
-/* --- Le Post Principal --- */
 .post-card {
-  /* On n'utilise pas la classe .card pour avoir plus de contrôle */
-  background-color: var(--color-background-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-xl);
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.0rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  word-break: break-all;
 }
 
 .post-header {
-  padding-bottom: var(--space-lg);
-  margin-bottom: var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
 }
 
 .post-title {
-  font-size: 2.5rem; /* Plus grand et impactant */
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--color-text-headings);
-  margin-bottom: var(--space-md);
-  overflow-wrap: break-word;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin: 0 0 0.5rem 0;
 }
 
 .post-meta {
   display: flex;
-  flex-wrap: wrap; /* Passe à la ligne sur mobile */
-  align-items: center;
-  gap: var(--space-sm) var(--space-md);
-  color: var(--color-text-muted);
+  gap: 0.5rem;
+  color: var(--text-muted);
   font-size: 0.95rem;
+  align-items: center;
 }
 
 .post-meta .dot {
-  /* Caché car on utilise une autre méthode de séparation */
-  display: none;
-}
-
-/* Ajoute une séparation élégante entre les métadonnées */
-.post-meta > span:not(:last-child)::after {
-  content: '•';
-  margin-left: var(--space-md);
-  color: var(--color-border);
-}
-
-.post-meta .tag {
-  background-color: var(--color-background-alt);
-  color: var(--color-text-body);
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-full);
-  font-weight: 500;
-  font-size: 0.85rem;
-}
-
-.post-meta .tag::after {
-  /* Le tag est le dernier, pas de séparateur après */
-  content: none;
-}
-
-.delete-post-button {
-  /* On le place à part pour un meilleur contrôle */
-  margin-left: auto;
-  background-color: transparent;
-  color: var(--color-danger);
-  border: 1px solid transparent;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-}
-.delete-post-button:hover {
-  background-color: hsl(0, 72%, 95%);
-  border-color: var(--color-danger);
+  font-weight: bold;
 }
 
 .post-body {
   font-size: 1.1rem;
-  line-height: 1.8; /* Interlignage généreux pour la lisibilité */
-  color: var(--color-text-body);
+  line-height: 1.7;
+  color: var(--text-color);
   white-space: pre-wrap;
-  overflow-wrap: break-word;
-}
-/* Style pour le contenu HTML (code, citations, etc.) */
-.post-body :deep(h2) {
-  font-size: 1.5rem;
-  margin: var(--space-lg) 0 var(--space-md) 0;
-}
-.post-body :deep(p) {
-  margin-bottom: var(--space-md);
-}
-.post-body :deep(code) {
-  background-color: var(--color-background-alt);
-  padding: 0.2rem 0.4rem;
-  border-radius: var(--radius-md);
-  font-size: 0.9em;
 }
 
-/* --- Section des Commentaires --- */
+/* Comments section */
 .comments-section {
-  /* Les commentaires sont visuellement séparés du post principal */
+  margin-top: 2rem;
 }
 
 .separator {
-  display: none; /* Remplacé par un espacement plus moderne */
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 2rem 0;
 }
 
-.comment-warning {
-  text-align: center;
-  padding: var(--space-xl);
-  background-color: var(--color-background-alt);
-  border-radius: var(--radius-lg);
-  color: var(--color-text-muted);
-}
-.comment-warning a {
-  color: var(--color-secondary);
-  font-weight: 600;
-  text-decoration: none;
-}
-.comment-warning a:hover {
-  text-decoration: underline;
-}
-
-/* --- États de la page --- */
+/* Loading and error states */
 .loading-state,
 .error-message {
   text-align: center;
-  padding: 6rem var(--space-lg);
-  color: var(--color-text-muted);
   font-size: 1.2rem;
+  color: var(--text-muted);
+  padding: 4rem 2rem;
 }
 
 .error-message {
-  color: var(--color-danger);
+  color: var(--danger-color);
+  font-weight: 500;
+}
+.warning{
+  color: var(--danger-color);
   font-weight: 500;
 }
 
-/* --- Responsive --- */
+button {
+ width: 150px;
+ height: 50px;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ background: red;
+ border: none;
+ border-radius: 5px;
+ box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+ background: #e62222;
+ margin-left: auto;
+}
+
+button, button span {
+ transition: 200ms;
+}
+
+button .text {
+ transform: translateX(35px);
+ color: white;
+ font-weight: bold;
+}
+
+button .icon {
+ position: absolute;
+ border-left: 1px solid #c41b1b;
+ transform: translateX(110px);
+ height: 40px;
+ width: 40px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+button svg {
+ width: 15px;
+ fill: #eee;
+}
+
+button:hover {
+ background: #ff3636;
+}
+
+button:hover .text {
+ color: transparent;
+}
+
+button:hover .icon {
+ width: 150px;
+ border-left: none;
+ transform: translateX(0);
+}
+
+button:focus {
+ outline: none;
+}
+
+button:active .icon svg {
+ transform: scale(0.8);
+}
+/* Responsive */
 @media (max-width: 768px) {
-  .post-detail-view {
-    padding-top: var(--space-lg);
-  }
+
   .post-card {
-    padding: var(--space-lg);
+    padding: 2rem 1.5rem;
   }
+
   .post-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .post-footer {
+    text-align: left;
   }
 }
 </style>

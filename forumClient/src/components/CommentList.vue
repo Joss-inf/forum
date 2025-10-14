@@ -44,10 +44,6 @@ async function deleteComment(commentId: number) {
             Par <span class="author">{{ comment.author_username }}</span>
             le <span class="date">{{ new Date(comment.created_at).toLocaleString('fr-FR') }}</span>
           </div>
-          <!--
-            LE POINT CLÉ : On affiche le bouton uniquement si l'ID de l'utilisateur
-            connecté correspond à l'ID de l'auteur du commentaire.
-          -->
           <button 
             v-if="authStore.user?.id === comment.user_id" 
             @click="deleteComment(comment.id)"
@@ -146,4 +142,5 @@ async function deleteComment(commentId: number) {
   font-style: italic;
   font-size: 1rem;
 }
+
 </style>

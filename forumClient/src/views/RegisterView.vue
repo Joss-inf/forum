@@ -125,98 +125,114 @@ async function handleRegister() {
 
 
 <style scoped>
-.auth-layout {
-  display: grid;
-  /* Sur grand écran, on a une grille 50/50 */
-  grid-template-columns: 1fr 1fr;
-  min-height: 100vh;
-}
-
-.register-wrapper {
-  /* Style pour le conteneur de gauche */
-  /* C'est à SideContentRegister de gérer son propre style interne */
-  background-color: var(--color-background-alt); /* Un fond subtil */
+.register-wrapper{
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  padding: var(--space-xl);
+  align-self: center;
+  flex-direction: row-reverse;
+}
+.auth-form-container {
+  background: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
+  min-width: 50vw;
+  padding: 2rem;
+  box-sizing: border-box;
+  animation: fadeInBackground 1.5s ease-out forwards;
+  order: 1;
 }
 
-.auth-form-container {
-  display: grid;
-  place-items: center;
-  padding: var(--space-xl);
-  width: -moz-available;
-  width: -webkit-fill-available;
-  width: fill-available;
-  background-color: var(--color-background);
+@keyframes fadeInBackground {
+  from { background-position: 0% 50%; opacity: 0.8; }
+  to { background-position: 100% 50%; opacity: 1; }
 }
+
+
 
 .auth-form {
-  width: 100%;
+  background-color: var(--card-bg-color);
+  padding: 3rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  animation: slideIn 0.8s ease-out forwards;
+  width: 100vw;
   max-width: 440px;
-  /* On enlève la bordure et l'ombre pour un look plus plat qui s'intègre mieux */
-  border: none;
-  box-shadow: none;
-  background-color: transparent;
 }
 
-h1 {
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: var(--space-xs);
+@keyframes slideIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.form-subtitle {
+.auth-form h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin:0;
+  margin-bottom: 0.5rem;
   text-align: center;
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-lg);
+  letter-spacing: 1px;
 }
 
 .submit-button {
   width: 100%;
-  margin-top: var(--space-md);
-  padding-top: var(--space-md);
-  padding-bottom: var(--space-md);
-  font-size: 1.1rem;
-}
-
-.auth-link {
-  text-align: center;
-  margin-top: var(--space-lg);
-  font-size: 0.95rem;
-}
-
-.auth-link a {
-  color: var(--color-secondary);
+  padding: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  background: #e0e6ed;
+  color: #7f8c8d;
+  font-size: 1.15rem;
   font-weight: 600;
-  text-decoration: none;
-  transition: var(--transition-smooth);
-}
-.auth-link a:hover {
-  text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  border-radius: 100px;
 }
 
-/* --- Responsive --- */
-@media (max-width: 992px) {
-  .auth-layout {
-    /* Sur petit écran, on passe à une seule colonne */
-    grid-template-columns: 1fr;
-  }
-  
-  .side-content-container {
-    /* On peut choisir de le cacher sur mobile... */
-    display: none; 
-    
-    /* ...OU de le mettre au-dessus (plus moderne) */
-    /* Pour cela, décommentez la ligne ci-dessous et ajustez sa hauteur */
-    /* order: -1; min-height: 300px; */
+.submit-button:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+.submit-button:disabled {
+  background-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .auth-form {
+    padding: 2.5rem 1.5rem;
+    border-radius: 12px;
   }
 
-  .auth-form-container {
-    /* Le formulaire prend toute la largeur */
-    padding: var(--space-lg);
+  .auth-form h1 {
+    font-size: 2rem;
+  }
+
+  .form-group label,
+  .form-group input,
+  .submit-button,
+  .error-message {
+    font-size: 0.9rem;
+  }
+
+  .submit-button {
+    padding: 0.9rem;
+  }
+
+  .auth-form-container{
+    padding: 1rem;
   }
 }
 </style>

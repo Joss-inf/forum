@@ -86,25 +86,6 @@
   --md-sys-motion-duration-medium: 250ms;
 }
 
-/*
- * ==========================================================================
- *  STYLES GLOBAUX & RESET
- * ==========================================================================
- */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: var(--md-sys-typescale-font-family);
-  font-size: var(--md-sys-typescale-body-large-size);
-  color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
 h1, h2, h3 { color: var(--md-sys-color-on-surface); line-height: 1.2; }
 h1 { font-size: var(--md-sys-typescale-headline-large-size); }
@@ -113,12 +94,6 @@ h3 { font-size: var(--md-sys-typescale-title-large-size); }
 h4 { font-size: var(--md-sys-typescale-title-medium-size); }
 
 
-/*
- * ==========================================================================
- *  2. RESET CSS & STYLES GLOBAUX
- * ==========================================================================
- *  Assure un comportement cohérent sur tous les navigateurs.
- */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -128,7 +103,8 @@ h4 { font-size: var(--md-sys-typescale-title-medium-size); }
 
 body {
   min-height: 100vh;
-  font-family: 'Poppins';
+  width:100vw;
+  font-family: var(--md-sys-typescale-font-family);
   font-size: 16px; /* Taille de base plus standard */
   color: var(--color-text-body);
   background-color: var(--color-background-body);
@@ -136,33 +112,23 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  background-color: bisque;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family-headings);
-  color: var(--color-text-headings);
-  line-height: 1.2;
-}
-
-/*
- * ==========================================================================
- *  3. CLASSES UTILITAIRES DE LAYOUT
- * ==========================================================================
- *  Classes réutilisables pour la mise en page.
- */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--space-lg);
-  padding-right: var(--space-lg);
-}
-
-.card {
-  background-color: var(--color-background-card);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--color-border);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-sm);
+option {
+			appearance: base-select;
+			padding: 0.5rem;
+			color:  var(--md-sys-color-outline-variant);
+      font-family:var(--md-sys-typescale-font-family)
+	}
+select,
+select::picker(select) {
+	appearance: base-select;
+	padding: 0.5rem;
+	border: 2px solid #8ec89a;
+	border-radius: 10px;
+	background-color: white;
+	color: #8ec89a;
 }

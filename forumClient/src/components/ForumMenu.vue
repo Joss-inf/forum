@@ -15,7 +15,7 @@
           class="search-button" 
           @click="emit('search')"
         >
-          Rechercher
+        <img class = 'icon' src="https://cdn-icons-png.flaticon.com/512/7079/7079548.png" alt="icône" />
         </button>
       </div>
       
@@ -34,17 +34,16 @@
           v-model="sortOrderModel"
           :options="sortOptions"
         />
+         <button 
+            v-if="props.isAuthenticated"
+            class="create-button" 
+            @click="emit('toggle-create')"
+          >
+            {{ props.isCreating ? 'Annuler' : 'Créer un post' }}
+          </button>
       </div>
     </div>
-
-    <!--  UTILISATION D'UN BOUTON NATIF -->
-    <button 
-      v-if="props.isAuthenticated"
-      class="create-button" 
-      @click="emit('toggle-create')"
-    >
-      {{ props.isCreating ? 'Annuler' : 'Créer un post' }}
-    </button>
+   
   </div>
 </template>
 
@@ -94,43 +93,39 @@ const sortOptions = [
 <style scoped>
 /* J'ajoute des styles de base pour que les boutons natifs ressemblent à quelque chose */
 .forum-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   padding: 1.5rem;
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+  border-radius: 30px 30px 0px 0px;
 }
 .search-and-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex-grow: 1;
+  width: 100%;
 }
 .search-container {
   display: flex;
-  gap: 0.5rem;
+  position: relative;
 }
+
 .search-bar {
-  flex-grow: 1;
   padding: 0.75rem 1rem;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 4rem;
   font-size: 1rem;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  height: 60px;
+  background: var(--md-sys-color-surface-container-low);
 }
 .filter-container {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 /* --- STYLES POUR LES BOUTONS NATIFS --- */
 .search-button,
 .create-button {
-  padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
   font-size: 1rem;
@@ -140,9 +135,16 @@ const sortOptions = [
 }
 
 .search-button {
-  background-color: #f1f5f9;
-  color: #334155;
+  background-color: #cacaca;
+  color: #d7d7d9;
+  border-radius: 0 15rem 15rem 0;
+  width:60px;
+  height:60px;
+  flex: 0 0 auto;
+  position: absolute;
+  right: 0;
 }
+
 .search-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -151,5 +153,12 @@ const sortOptions = [
 .create-button {
   background-color: #34749f;
   color: white;
+  font: inherit;
+  flex: 1 1 150px;
 }
+.icon{
+  height: 40px;
+  aspect-ratio: 1/1;
+}
+
 </style>
