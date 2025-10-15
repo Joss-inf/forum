@@ -4,7 +4,7 @@
 import { useCommentSubmit, COMMENT_MAX_LENGTH } from '@/composables/useCommentSubmit';
 import type { Comment } from '@/types';
 import BaseInput from '@/components/BaseInput.vue';
-import BaseButton from '@/components/BaseButton.vue';
+import BaseButton from '@/components/buttons/BaseButton.vue';
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue';
 
 const props = defineProps<{postId: number}>();

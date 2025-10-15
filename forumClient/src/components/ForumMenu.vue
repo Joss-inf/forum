@@ -96,7 +96,7 @@ const sortOptions = [
   margin-bottom: 0.5rem;
   padding: 1.5rem;
   background-color: white;
-  border-radius: 30px 30px 0px 0px;
+  border-radius: 50px 50px 0px 0px;
 }
 .search-and-filters {
   width: 100%;

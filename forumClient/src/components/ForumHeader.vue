@@ -50,13 +50,12 @@ const isMenuOpen = ref(false);
 }
 
 .nav-bar {
-  max-width: 1200px;
   margin: 0 auto;
   height: 100%;
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  position: relative;
 }
 
 .nav-logo a {
@@ -64,6 +63,8 @@ const isMenuOpen = ref(false);
   font-size: 1.3rem;
   color: var(--primary-color);
   text-decoration: none;
+  position: absolute;
+  top: 25%;
 }
 
 .menu-toggle {
@@ -78,6 +79,8 @@ const isMenuOpen = ref(false);
 .nav-menu {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
   gap: 1rem;
   list-style: none;
   margin: 0;
@@ -103,6 +106,7 @@ const isMenuOpen = ref(false);
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
+    margin-left: auto;
   }
 
   .nav-menu {

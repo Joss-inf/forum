@@ -8,7 +8,6 @@ import CreatePostForm from '@/components/CreatePostForm.vue';
 import ForumMenu from '@/components/ForumMenu.vue';
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
 
-
 const authStore = useAuthStore();
 const isCreating = ref(false);
 
@@ -89,39 +88,6 @@ function handlePostCreated(newPost: Post) {
 <style scoped>
 .post-item:last-child {
   border-radius: 0px 0px 30px 30px;
-}
-.forum-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.search-and-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex-grow: 1;
-}
-
-.search-container {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.search-bar {
-  flex-grow: 1;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-.filter-container {
-  display: flex;
-  gap: 1rem;
 }
 
 .forum-container {

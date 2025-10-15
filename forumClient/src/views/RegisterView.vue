@@ -133,8 +133,6 @@ async function handleRegister() {
   flex-direction: row-reverse;
 }
 .auth-form-container {
-  background: var(--bg-color);
-  color: var(--text-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,7 +152,7 @@ async function handleRegister() {
 
 
 .auth-form {
-  background-color: var(--card-bg-color);
+   background: var(--md-sys-color-on-primary);
   padding: 3rem 2.5rem;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);

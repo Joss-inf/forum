@@ -11,23 +11,3 @@ import HeaderStart from './components/ForumHeader.vue';
   </main>
   <FooterEnd/>
 </template>
-
-
-<style>
-:root {
-  --primary-color: #007bff;
-  --background-color: #f8f9fa;
-  --text-color: #212529;
-  --border-color: #dee2e6;
-}
-html{
-  scroll-behavior: smooth;
-}
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  margin: 0;
-  background-color: var(--background-color);
-  color: var(--text-color);
-}
-
-</style>

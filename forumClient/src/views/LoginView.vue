@@ -60,30 +60,9 @@ async function handleLogin() {
 
 
 <style scoped>
-/* Import des polices depuis Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap');
-
-/* Variables pour un design cohérent et modifiable */
-:root {
-  --primary-color: #6a11cb; /* Un violet plus profond */
-  --primary-color-dark: #2575fc; /* Un bleu plus vif pour le hover */
-  --secondary-color: #2c3e50;
-  --text-color: #333;
-  --text-color-light: #7f8c8d;
-  --bg-color: linear-gradient(to right, #6a11cb, #2575fc); /* Dégradé pour le fond */
-  --card-bg-color: #fff;
-  --border-color: #e0e6ed;
-  --input-bg-color: #f0f0f0; /* Un gris très clair pour les inputs */
-  --shadow-light: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15);
-  --error-color: #e74c3c;
-}
 
 /* Styles globaux pour la page (le conteneur principal du composant) */
 .auth-page {
-  font-family: 'Poppins', 'Inter', sans-serif; /* Poppins en priorité */
-  background: var(--bg-color);
-  color: var(--text-color);
   margin: 0;
   display: flex;
   justify-content: center;
@@ -109,7 +88,7 @@ async function handleLogin() {
 
 /* Style du formulaire lui-même */
 .auth-form {
-  background-color: var(--card-bg-color);
+  background: var(--md-sys-color-on-primary);
   padding: 3rem 2.5rem;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);

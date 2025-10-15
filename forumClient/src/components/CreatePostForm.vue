@@ -10,7 +10,6 @@ import {
 } from '@/composables/useCreatePost';
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue';
 import BaseInput from '@/components/BaseInput.vue';
-import BaseButton from '@/components/BaseButton.vue'; // J'utilise BaseButton pour la cohérence
 
 const emit = defineEmits<{
   (e: 'post-created', post: Post): void
@@ -97,6 +96,5 @@ watch(createdPost, (newVal) => {
   color: #1e293b;
 }
 
-/* BaseInput gère la plupart des styles, donc il y a moins de CSS ici */
 </style>
     

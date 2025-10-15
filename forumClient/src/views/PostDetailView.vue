@@ -172,7 +172,7 @@ button, button span {
 }
 
 button .text {
- transform: translateX(35px);
+ transform: translateX(15px);
  color: white;
  font-weight: bold;
 }
@@ -180,7 +180,7 @@ button .text {
 button .icon {
  position: absolute;
  border-left: 1px solid #c41b1b;
- transform: translateX(110px);
+ transform: translateX(101px);
  height: 40px;
  width: 40px;
  display: flex;

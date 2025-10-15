@@ -57,122 +57,145 @@ const togglePasswordChange = () => { isChangingPassword.value = !isChangingPassw
 .profile-page-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Aligner en haut pour les pages longues */
-  padding: var(--space-xl);
-  background-color: var(--color-background-body);
+  align-items: center;
+  padding: 2rem 1rem;
   min-height: 100vh;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
 }
 
 .profile-card {
-  background-color: var(--color-background-card);
-  border-radius: var(--radius-xl);
-  max-width: 500px;
+  background-color: white;
+  border-radius: 8px;
+  max-width: 480px;
   width: 100%;
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border);
+  height: fit-content;
+  padding: 2rem;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.2), 0px 1px 1px rgba(0,0,0,0.14), 0px 1px 3px rgba(0,0,0,0.12);
 }
 
 .profile-title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--color-text-headings);
-  margin-bottom: var(--space-lg);
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 1.5rem;
   text-align: center;
 }
 
-/* 
-  Note : Les styles pour .message, .form-group, .input-error, .error-text
-  devraient être gérés par les composants enfants (BaseMessageAlert, BaseInput).
-  Je les laisse ici car la consigne est de ne modifier que ce fichier,
-  mais dans une refonte complète, ils disparaîtraient.
-*/
+.message-area {
+  margin-bottom: 1rem;
+}
+
+.message {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.message.success {
+  background-color: #e6f4ea;
+  color: #188038;
+}
+
+.message.error {
+  background-color: #fce8e6;
+  color: #d93025;
+}
 
 .profile-info, .edit-form {
-  margin-bottom: var(--space-lg);
-  border: 1px solid var(--color-border);
-  padding: var(--space-sm);
-  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  border: solid 1px #e0e0e0;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: var(--space-md) var(--space-sm);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.info-row:last-child {
-  border-bottom: none;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .info-row .label {
-  color: var(--color-text-muted);
+  color: #5f6368;
   font-weight: 500;
 }
 
 .info-row .value {
-  color: var(--color-text-body);
+  color: #202124;
+}
+
+.sub-title {
+  font-size: 1.2rem;
   font-weight: 500;
+  margin-bottom: 1rem;
+  color: #202124;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  color: #3c4043;
+  margin-bottom: 0.4rem;
+}
+
+.form-group input {
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  
+}
+
+.form-group input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+.input-error {
+  border-color: #d93025 !important;
+}
+
+.error-text {
+  color: #d93025;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }
 
 .action-row {
   display: flex;
   justify-content: flex-end;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
-}
-
-.password-section {
-  margin-top: var(--space-lg);
-  border-top: 1px solid var(--color-border);
-  padding-top: var(--space-lg);
-}
-
-/* 
-  Les styles des boutons (.btn) devraient être gérés par le composant BaseButton.
-  Si vous utilisez des <button> natifs, ce CSS les alignera avec le design system.
-*/
-.btn {
-  padding: var(--space-sm) var(--space-lg);
-  font-size: 0.95rem;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition-smooth);
+  margin: 4px;
 }
 
 .btn.primary {
-  background-color: var(--color-primary);
-  color: var(--color-text-light);
-}
-.btn.primary:hover {
-  background-color: var(--color-primary-dark);
+  float: right;
 }
 
-.btn.primary.outline {
-  background-color: transparent;
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-}
-.btn.primary.outline:hover {
-  background-color: hsl(153, 48%, 95%);
-}
-
-.btn.secondary {
-  background-color: var(--color-background-alt);
-  color: var(--color-text-body);
-  border-color: var(--color-border);
-}
 .btn.secondary:hover {
-  background-color: hsl(210, 20%, 90%);
+  background-color: #e8eaed;
+}
+
+.password-section {
+  margin-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1.5rem;
 }
 
 .loading-state {
+  font-size: 1rem;
+  color: #5f6368;
   text-align: center;
-  color: var(--color-text-muted);
-  padding: var(--space-xl);
 }
 </style>
+

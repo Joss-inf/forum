@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'; 
+
 import { useScrollEffects } from '@/composables/useScrollEffects';
+import CTAButton from '@/components/buttons/CTAButton.vue';
 useScrollEffects();
 </script>
 
@@ -14,8 +15,8 @@ useScrollEffects();
             <h1 class="hero-title">VueSphere : Votre Écosystème <span class="gradient-text">Vue.js</span></h1>
             <p class="hero-subtitle">Connectez-vous, Apprenez, Créez. Le forum nouvelle génération pour les développeurs Vue.</p>
             <div class="hero-actions">
-              <RouterLink to="/register" class="btn btn-primary hero-btn">Rejoindre VueSphere</RouterLink>
-              <a href="#features" class="btn btn-secondary hero-btn">Découvrir les Fonctionnalités</a>
+              <CTAButton to="/register" variant="primary">Rejoindre VueSphere</CTAButton>
+              <a href="#features" class=" hero-btn">Découvrir les Fonctionnalités</a>
             </div>
           </div>
           <div class="hero-illustration reveal-item">
@@ -135,7 +136,7 @@ useScrollEffects();
                 <path d="M120 20L170 120L120 220L70 120L120 20Z" fill="url(#gradient-router)" opacity="0.8"/>
                 <path d="M120 40L155 120L120 200L85 120L120 40Z" fill="#FFF" opacity="0.1"/>
                 <path d="M120 120L180 120L150 150L180 120L150 90L180 120Z" fill="#FFF" opacity="0.2"/>
-                <path d="M120 120L60 120L90 90L60 120L90 150L60 120Z" fill="#FFF" opacity="0.2"/>
+                <path d="M120 120L60 120L90 90L60 120L90 150L60 120Z" fill="#33FFF" opacity="0.2"/>
               </svg>
             </div>
           </div>
@@ -180,8 +181,8 @@ useScrollEffects();
           <h2 class="cta-title">Prêt à Plonger dans l'Univers Vue.js ?</h2>
           <p class="cta-subtitle">Participez aux discussions, partagez vos connaissances et élevez votre niveau de développement.</p>
           <div class="cta-actions">
-            <RouterLink to="/register" class="btn btn-primary cta-btn">S'inscrire Maintenant</RouterLink>
-            <RouterLink to="/login" class="btn btn-tertiary cta-btn">Se Connecter</RouterLink>
+            <CTAButton to="/register" variant="primary">S'inscrire Maintenant</CTAButton>
+            <CTAButton to="/login" variant="tertiary">Se Connecter</CTAButton>
           </div>
         </div>
       </section>
@@ -269,77 +270,6 @@ strong {
   background-clip: text;
 }
 
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: all var(--transition-speed) ease;
-  border: none;
-}
-
-.btn-primary {
-  margin: 10px;
-  padding: 15px 30px;
-  text-align: center;
-  text-transform: uppercase;
-  transition: 0.5s;
-  background-size: 200% auto;
-  color: white;
-  border-radius: 10px;
-  display: block;
-  border: 0px;
-  font-weight: 700;
-  box-shadow: 0px 0px 14px -7px #57C785;
-  background-image: linear-gradient(45deg, #2A7B9B 0%, #57C785  51%, #2A7B9B  100%);
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-.button-87:hover {
-  background-position: right center;
-  /* change the direction of the change here */
-  color: #fff;
-  text-decoration: none;
-}
-
-.btn-primary:hover {
-  background-position: right center;
-  color: #fff;
-  text-decoration: none;
-}
-
-.btn-primary:active
-.btn-tertiary:active
- {
-  transform: scale(0.95);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--text-color-dark);
-  border: 2px solid var(--text-color-dark);
-}
-
-.btn-tertiary {
-  background-color: transparent;
-  border: 2px solid rgba(0, 0, 0, 0.5);
-  transition: color 0.3s ease;
-}
-.btn-tertiary:hover {
-  background-color: black;
-  color: white;
-  transition: color 0.3s ease;
-}
-
-
 /* Header */
 .app-header {
   position: fixed;
@@ -362,35 +292,6 @@ strong {
   height: 60px; /* Hauteur réduite au scroll */
 }
 
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 100%; /* S'assure que la nav prend toute la hauteur du header */
-}
-
-.nav-logo a {
-  display: flex;
-  align-items: center;
-  font-weight: 700;
-  font-size: 1.6rem;
-  color: var(--text-color-dark);
-  transition: all var(--transition-speed) ease;
-}
-
-.nav-logo svg {
-  height: 2.8rem;
-  width: 2.8rem;
-  margin-right: 0.6rem;
-  transition: all var(--transition-speed) ease;
-}
-
-.app-header.scrolled .nav-logo svg {
-  height: 2.2rem;
-  width: 2.2rem;
-}
-
 .logo-text {
   background: var(--primary-gradient);
   -webkit-background-clip: text;
@@ -402,142 +303,6 @@ strong {
 
 .app-header.scrolled .logo-text {
   font-size: 1.5rem; /* Plus petit au scroll */
-}
-
-
-/* Menu Toggle (Burger icon) */
-.menu-toggle {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  width: 30px;
-  height: 24px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  z-index: 1001; /* Au-dessus du menu */
-  display: none; /* Masqué par défaut sur desktop */
-}
-
-.menu-toggle:focus {
-  outline: none;
-}
-
-.icon-bar {
-  width: 100%;
-  height: 3px;
-  background-color: var(--menu-toggle-color);
-  border-radius: 1px;
-  transition: all 0.3s ease-in-out;
-}
-
-/* Animation du burger en croix */
-.menu-toggle.open .icon-bar:nth-child(1) {
-  transform: translateY(10.5px) rotate(45deg);
-}
-.menu-toggle.open .icon-bar:nth-child(2) {
-  opacity: 0;
-}
-.menu-toggle.open .icon-bar:nth-child(3) {
-  transform: translateY(-10.5px) rotate(-45deg);
-}
-
-/* Nav Menu */
-.nav-menu {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  gap: 2rem; /* Espacement moderne */
-  transition: all var(--transition-speed) ease-in-out;
-}
-
-.nav-menu li a {
-  font-weight: 500;
-  color: var(--text-color-dark);
-  padding: 0.5rem 0;
-  position: relative;
-  transition: color var(--transition-speed);
-}
-
-.nav-menu li a::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: -5px;
-  width: 0;
-  height: 2px;
-  background: var(--primary-gradient);
-  transition: width var(--transition-speed) ease, left var(--transition-speed) ease;
-}
-
-.nav-menu li a:hover::after,
-.nav-menu li a.router-link-exact-active::after {
-  width: 100%;
-  left: 0;
-}
-
-.nav-menu li a:hover {
-  color: var(--primary-gradient);
-}
-
-.nav-menu li a.router-link-exact-active {
-  font-weight: 600;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Nav Buttons */
-.nav-button {
-  padding: 0.7rem 1.4rem;
-  border-radius: 50px;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap; /* Empêche le texte de se casser sur plusieurs lignes */
-  transition: all var(--transition-speed) ease;
-}
-
-.primary-button {
-  background: var(--primary-gradient);
-  color: var(--text-color-light);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.primary-button:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  transform: translateY(-2px);
-}
-
-.secondary-button {
-  border: 1px solid var(--primary-gradient);
-  color: var(--text-color-dark);
-  background-color: transparent;
-}
-
-.secondary-button:hover {
-  background: var(--primary-gradient);
-  color: var(--text-color-light);
-  transform: translateY(-2px);
-}
-
-.logout-button {
-  color: var(--text-color-dark); /* Couleur du texte par défaut */
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.logout-button:hover {
-  color: #d9534f; /* Couleur rouge pour la déconnexion */
-  border-color: #d9534f;
-  transform: translateY(-2px);
-}
-
-/* Main content wrapper to avoid being hidden by fixed header */
-.content-wrapper {
-  padding-top: 0px; /* Correspond à la hauteur par défaut du header */
 }
 
 /* Hero Section */
@@ -779,14 +544,7 @@ strong {
 
 /* Media Queries pour la responsivité */
 @media (max-width: 992px) {
-  /* Header */
-  .nav-menu {
-    gap: 1.5rem;
-  }
-
-  .nav-menu li a {
-    padding: 0.4rem 0;
-  }
+ 
 
   /* Hero Section */
   .hero-content-wrapper {
@@ -880,13 +638,7 @@ strong {
     height: 60px; /* Assurer que la hauteur reste la même */
   }
 
-  .nav-logo a {
-    font-size: 1.4rem;
-  }
-  .nav-logo svg {
-    height: 2.2rem;
-    width: 2.2rem;
-  }
+  
   .logo-text {
     font-size: 1.5rem;
   }

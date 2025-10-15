@@ -17,6 +17,12 @@
   --md-sys-color-on-primary: hsl(0, 0%, 100%);
   --md-sys-color-primary-container: hsl(210, 80%, 90%);
   --md-sys-color-on-primary-container: hsl(210, 80%, 25%);
+
+  --primary-color: #007bff;
+  --background-color: #e2edff;;
+  --text-color: #212529;
+  --border-color: #dee2e6;
+
   /* Secondaire */
   --md-sys-color-secondary: hsl(260, 45%, 60%);
   --md-sys-color-on-secondary: hsl(0, 0%, 100%);
@@ -114,21 +120,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
-  background-color: bisque;
+  background-color: var(--background-color);
 }
-
-option {
-			appearance: base-select;
-			padding: 0.5rem;
-			color:  var(--md-sys-color-outline-variant);
-      font-family:var(--md-sys-typescale-font-family)
-	}
-select,
-select::picker(select) {
-	appearance: base-select;
-	padding: 0.5rem;
-	border: 2px solid #8ec89a;
-	border-radius: 10px;
-	background-color: white;
-	color: #8ec89a;
+html{
+  scroll-behavior: smooth;
 }
