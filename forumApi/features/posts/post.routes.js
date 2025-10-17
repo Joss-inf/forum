@@ -14,7 +14,7 @@ router.post(
   '/',
   authMiddleware,
   [
-    body('title').isLength({ min: 5, max: 100 }),
+    body('title').isLength({ min: 5, max: 500 }),
     body('content').isLength({ min: 20, max: 5000 }),
   ],
   postController.createPost
@@ -24,7 +24,7 @@ router.put(
   '/:id',
   authMiddleware,
   [
-    body('title').isLength({ min: 5, max: 100 }),
+    body('title').isLength({ min: 5, max: 500 }),
     body('content').isLength({ min: 20, max: 5000 }),
   ],
   postController.updatePost
@@ -39,7 +39,7 @@ router.post(
   '/:postId/comments',
   authMiddleware,
   [
-    body('content').isLength({ min: 5, max: 1000 }),
+    body('content').isLength({ min: 1, max: 1000 }),
   ],
   commentController.createComment
 );

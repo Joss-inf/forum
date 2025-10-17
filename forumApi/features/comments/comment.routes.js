@@ -11,7 +11,7 @@ router.put(
   authMiddleware,
   csrfMiddleware,
   [
-    body('content').isLength({ min: 5, max: 1000 }),
+    body('content').isLength({ min: 1, max: 1000 }),
   ],
   commentController.updateComment
 );
