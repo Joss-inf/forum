@@ -1,103 +1,103 @@
 // src/composables/usePosts.ts
-import { ref, onMounted, watch } from 'vue'; // <-- Importer watch
-import type { Ref } from 'vue';
-import apiClient from '@/services/apiClient';
-import type { Post, Tag, Params } from '@/types'; // <-- S'assurer que Tag est importé
+import { ref, onMounted, watch, type Ref } from 'vue'
+import { useApi } from '@/composables/useApi'
+import type { Post, Tag, Params } from '@/types'
 
 export function usePosts() {
   // --- État ---
-  const posts: Ref<Post[]> = ref([]);
-  const isLoading: Ref<boolean> = ref(false);
-  const error: Ref<string | null> = ref(null);
-  
-  // --- NOUVEL ÉTAT POUR LES FILTRES ---
-  const searchQuery: Ref<string> = ref('');
-  const selectedTag: Ref<number | null> = ref(null); // Pour le filtre par tag
-  const sortOrder: Ref<'ASC' | 'DESC'> = ref('DESC'); // Pour le tri
-  const availableTags: Ref<Tag[]> = ref([]); // Pour peupler la liste déroulante
+  const posts: Ref<Post[]> = ref([])
+  const searchQuery: Ref<string> = ref('')
+  const selectedTag: Ref<number | null> = ref(null)
+  const sortOrder: Ref<'ASC' | 'DESC'> = ref('DESC')
+  const availableTags: Ref<Tag[]> = ref([])
+  const hasMorePosts: Ref<boolean> = ref(true)
+  const postsPerPage = 10
+  const lastCursorCreatedAt: Ref<string | null> = ref(null)
+  const lastCursorId: Ref<number | null> = ref(null)
 
-  // --- Pagination ---
-  const postsPerPage = 10;
-  const lastCursorCreatedAt: Ref<string | null> = ref(null);
-  const lastCursorId: Ref<number | null> = ref(null);
-  const hasMorePosts: Ref<boolean> = ref(true);
+  // --- useApi pour les posts ---
+  const {
+    data: postsData,
+    loading: postsLoading,
+    error: postsError,
+    execute: fetchPostsApi
+  } = useApi<{ posts: Post[]; hasMore: boolean }>('/posts', { method: 'GET', params: {} })
 
-  // --- NOUVELLE FONCTION POUR RÉCUPÉRER LES TAGS ---
-  async function fetchTags() {
-    try {
-      const response = await apiClient.get<Tag[]>('/tags');
-      availableTags.value = response.data;
-    } catch (err) {
-      console.error("Impossible de charger les tags.", err);
-    }
+  // --- useApi pour les tags ---
+  const {
+    data: tagsData,
+    loading: tagsLoading,
+    error: tagsError,
+    execute: fetchTagsApi
+  } = useApi<Tag[]>('/tags', { method: 'GET' })
+
+  // --- computed pour loading / error global ---
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
+
+  const updateLoadingError = () => {
+    isLoading.value = postsLoading.value || tagsLoading.value
+    error.value = postsError.value?.message || tagsError.value?.message || null
   }
 
-  // --- FONCTION fetchPosts MISE À JOUR ---
+  // --- Fonction pour récupérer les posts ---
   async function fetchPosts(reset = false) {
-    if (isLoading.value && !reset) return;
-
-    isLoading.value = true;
-    error.value = null;
+    if (isLoading.value && !reset) return
 
     if (reset) {
-      posts.value = [];
-      lastCursorCreatedAt.value = null;
-      lastCursorId.value = null;
-      hasMorePosts.value = true;
+      posts.value = []
+      lastCursorCreatedAt.value = null
+      lastCursorId.value = null
+      hasMorePosts.value = true
     }
 
-    try {
-      const params: Params = { 
-        limit: postsPerPage,
-        order: sortOrder.value // Toujours envoyer l'ordre de tri
-      };
-      
-      if (lastCursorCreatedAt.value && lastCursorId.value) {
-        params.cursorCreatedAt = lastCursorCreatedAt.value;
-        params.cursorId = lastCursorId.value;
-      }
-      if (searchQuery.value) params.titleSearch = searchQuery.value;
-      if (selectedTag.value) params.tag = selectedTag.value; // Ajouter le tag si sélectionné
+    const params: Params = {
+      limit: postsPerPage,
+      order: sortOrder.value
+    }
+    if (lastCursorCreatedAt.value && lastCursorId.value) {
+      params.cursorCreatedAt = lastCursorCreatedAt.value
+      params.cursorId = lastCursorId.value
+    }
+    if (searchQuery.value) params.titleSearch = searchQuery.value
+    if (selectedTag.value) params.tag = selectedTag.value
 
-      const response = await apiClient.get('/posts', { params });
-      const newPosts: Post[] = response.data.posts;
-      
-      posts.value.push(...newPosts);
+    await fetchPostsApi({ params })
+    updateLoadingError()
 
-      hasMorePosts.value = response.data.hasMore;
-      if (newPosts.length > 0) {
-        const lastPost = newPosts[newPosts.length - 1];
-        lastCursorCreatedAt.value = lastPost.created_at;
-        lastCursorId.value = lastPost.id;
+    if (postsData.value) {
+      posts.value.push(...postsData.value.posts)
+      hasMorePosts.value = postsData.value.hasMore
+      if (postsData.value.posts.length > 0) {
+        const lastPost = postsData.value.posts[postsData.value.posts.length - 1]
+        lastCursorCreatedAt.value = lastPost.created_at
+        lastCursorId.value = lastPost.id
       }
-    } catch (err) {
-      error.value = 'Impossible de charger les posts.';
-      console.error(err);
-    } finally {
-      isLoading.value = false;
     }
   }
 
-  // --- Gère la recherche par titre ---
+  // --- Fonction pour récupérer les tags ---
+  async function fetchTags() {
+    await fetchTagsApi()
+    updateLoadingError()
+    if (tagsData.value) availableTags.value = tagsData.value
+  }
+
+  // --- Gestion recherche / filtres ---
   async function handleSearch() {
-    await fetchPosts(true);
+    await fetchPosts(true)
   }
 
-  // --- NOUVEAU : DÉCLENCHER UNE RECHERCHE QUAND LES FILTRES CHANGENT ---
   watch([selectedTag, sortOrder], () => {
-    fetchPosts(true);
-  });
+    fetchPosts(true)
+  })
 
   // --- Chargement initial ---
   onMounted(async () => {
-    // On charge les tags et les posts en parallèle pour plus d'efficacité
-    await Promise.all([
-      fetchTags(),
-      fetchPosts()
-    ]);
-  });
+    await Promise.all([fetchTags(), fetchPosts()])
+  })
 
-  // --- Exposition des nouvelles variables ---
+  // --- Retour du composable ---
   return {
     posts,
     isLoading,
@@ -109,5 +109,5 @@ export function usePosts() {
     hasMorePosts,
     fetchPosts,
     handleSearch
-  };
+  }
 }

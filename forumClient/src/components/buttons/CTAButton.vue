@@ -10,7 +10,7 @@
 
 <script setup lang = "ts">
 import { computed } from 'vue';
-import { RouterLink } from 'vue-router'; // N'oubliez pas l'import si vous utilisez le setup script
+import { RouterLink } from 'vue-router'; 
 
 const props = defineProps({
   // La destination du RouterLink
@@ -29,9 +29,9 @@ const props = defineProps({
 // Calcule les classes à appliquer dynamiquement
 const linkClasses = computed(() => {
   return [
-    'btn',           // Classe de base (padding, font, border-radius communs)
-    'cta-btn',       // Classe spécifique au contexte "CTA" (appel à l'action)
-    `btn-${props.variant}`, // La classe qui change la couleur/le style
+    'btn',           
+    'cta-btn',       
+    `btn-${props.variant}`, 
   ];
 });
 </script>
@@ -52,7 +52,6 @@ const linkClasses = computed(() => {
 }
 
 .btn-primary {
-  margin: 10px;
   padding: 15px 30px;
   text-align: center;
   text-transform: uppercase;
@@ -99,5 +98,4 @@ const linkClasses = computed(() => {
   color: white;
   transition: color 0.3s ease;
 }
-/* ... etc. */
 </style>

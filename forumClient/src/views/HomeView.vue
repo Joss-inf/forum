@@ -177,7 +177,7 @@ useScrollEffects();
 
       <!-- Call to Action Section (Final) -->
       <section id="cta-final" class="cta-final-section">
-        <div class="container reveal-item">
+        <div class="cta-container reveal-item">
           <h2 class="cta-title">Prêt à Plonger dans l'Univers Vue.js ?</h2>
           <p class="cta-subtitle">Participez aux discussions, partagez vos connaissances et élevez votre niveau de développement.</p>
           <div class="cta-actions">
@@ -191,143 +191,97 @@ useScrollEffects();
 </template>
 
 <style scoped>
-/* Variables CSS */
-:root {
-  --primary-gradient: linear-gradient(45deg, #4CAF50, #8E24AA); /* Vert à Violet */
-  --secondary-gradient: linear-gradient(45deg, #1DE9B6, #AEEA00); /* Cyan à Jaune-Vert */
-  --text-color-dark: #1e1e1e; /* Ajusté pour cohérence */
-  --text-color-light: #f5f5f5;
-  --bg-dark: #121212;
-  --bg-light: #ffffff;
-  --bg-section-alt: #f8f9fa; /* Un fond légèrement différent pour alterner */
-  --card-bg-light: rgba(255, 255, 255, 0.05); /* Pour Glassmorphism (peut être ajusté pour les cartes de fonctionnalités si l'ancienne section était préférée) */
-  --border-color: rgba(0, 0, 0, 0.08); /* Ajusté */
-  --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.08); /* Ajusté */
-  --shadow-dark: 0 8px 30px rgba(0, 0, 0, 0.2); /* Ajusté */
-  --transition-speed: 0.4s;
-  --border-radius-large: 16px; /* Ajusté */
-  --border-radius-small: 8px;
 
-  /* Variables spécifiques au header */
-  --bg-header-default: rgba(255, 255, 255, 0.8);
-  --bg-header-scrolled: rgba(255, 255, 255, 0.95);
-  --border-color-light: rgba(255, 255, 255, 0.2);
-  --menu-toggle-color: #4CAF50;
-}
 
-/* Base styles */
-* {
-  box-sizing: border-box;
-}
-
+/* --- Styles de base et utilitaires --- */
 .vue-sphere-landing {
-  font-family: 'Inter', sans-serif; /* Assurez-vous d'importer Inter via Google Fonts ou similaire */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--text-color-dark);
-  line-height: 1.6;
-  background-color: #f0f2f5; /* Un fond plus doux pour le corps de page */
-  overflow-x: hidden; /* Empêche le scroll horizontal indésirable */
+  color: var(--md-sys-color-on-surface);
+  overflow-x: hidden; 
 }
-
-h1, h2, h3 {
-  font-family: 'Poppins', sans-serif; /* Ou une autre police forte */
-  margin-bottom: 1rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-h1 { font-size: 3.5rem; }
-h2 { font-size: 2.5rem; }
-h3 { font-size: 1.8rem; }
 
 p {
   font-size: 1.1rem;
   margin-bottom: 1rem;
-  color: rgba(30, 30, 30, 0.7); /* Couleur par défaut pour les paragraphes */
+  color: var(--md-sys-color-on-surface-variant); 
 }
 
 a {
   text-decoration: none;
   color: inherit;
-  transition: color var(--transition-speed);
+  transition: color var(--md-sys-motion-duration-medium);
 }
 strong {
   font-weight: 600;
-  color: var(--text-color-dark);
+  color: var(--md-sys-color-on-surface);
 }
 
 .container {
-  max-width: 1280px; /* Légèrement plus large que 1200px pour plus d'espace */
+  max-width: 1280px; 
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
 .gradient-text {
-  background: var(--primary-gradient);
+  background: var(--md-sys-color-primary); 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Header */
+/* --- Header --- */
 .app-header {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
-  background-color: var(--bg-header-default);
-  backdrop-filter: blur(8px); /* Glassmorphism effect */
-  border-bottom: 1px solid var(--border-color-light);
-  transition: all var(--transition-speed) ease-in-out;
-  height: 70px; /* Hauteur par défaut */
+  background-color: var(--md-sys-color-surface-bright);
+  backdrop-filter: blur(8px); 
+  border-bottom: 1px solid var(--md-sys-color-outline);
+  transition: all var(--md-sys-motion-duration-medium) ease-in-out;
+  height: 70px; 
   display: flex;
   align-items: center;
 }
 
 .app-header.scrolled {
-  background-color: var(--bg-header-scrolled);
-  box-shadow: var(--shadow-light);
+  background-color: var(--md-sys-color-surface-bright);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
   border-bottom-color: rgba(0, 0, 0, 0.05);
-  height: 60px; /* Hauteur réduite au scroll */
+  height: 60px; 
 }
 
 .logo-text {
-  background: var(--primary-gradient);
+  background: var(--md-sys-color-primary); 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 1.8rem; /* Plus grand initialement */
-  transition: font-size var(--transition-speed) ease;
+  font-size: 1.8rem; 
+  transition: font-size var(--md-sys-motion-duration-medium) ease;
 }
 
-.app-header.scrolled .logo-text {
-  font-size: 1.5rem; /* Plus petit au scroll */
-}
-
-/* Hero Section */
+/* --- Hero Section --- */
 .hero-section {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding-top: 8rem; /* Espace pour le header */
+  padding-top: 8rem; 
   padding-bottom: 4rem;
-  background: linear-gradient(135deg, #bdf0fe, #e1ffdf);; /* Fond clair et moderne */
+  background: linear-gradient(135deg, #bdf0fe, #e1ffdf);; 
   position: relative;
   overflow: hidden;
 }
-
-.hero-content-wrapper {
+.hero-text-content{
+  position: absolute;
+  z-index: 1;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 4rem;
-  position: relative;
-  z-index: 2; /* Pour être au-dessus des éléments de fond */
+  top: 25%;
 }
-
-.hero-text-content {
-  flex: 1;
-  max-width: 600px;
+.hero-content-wrapper {
+  position: relative;
+  z-index: 2; 
 }
 
 .hero-title {
@@ -338,8 +292,9 @@ strong {
 
 .hero-subtitle {
   font-size: 1.3rem;
-  color: rgba(30, 30, 30, 0.7); /* Ajusté pour la cohérence */
+  color:   var(--color-text-headings);
   margin-bottom: 2.5rem;
+  background: var(--md-sys-color-primary);
 }
 
 .hero-actions {
@@ -351,38 +306,16 @@ strong {
   padding: 1.2rem 2.5rem;
 }
 
-.hero-illustration {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.sphere-bg {
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  filter: blur(50px) opacity(0.8); /* Effet flou et lumineux */
-  animation: float 6s ease-in-out infinite alternate;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  100% { transform: translateY(-20px) rotate(5deg); }
-}
-
-/* Features Section (Revisitée) */
+/* --- Features Section --- */
 .features-section {
   padding: 8rem 0;
-  background: linear-gradient(65deg, #bdf0fe, #e1ffdf);; /* Fond clair pour cette section */
+  background: linear-gradient(65deg, #bdf0fe, #e1ffdf);; 
   position: relative;
   overflow: hidden;
-
 }
 
 .features-section .container {
-  max-width: 1100px; /* Légèrement plus étroit pour les piliers */
+  max-width: 1100px; 
 }
 
 .section-title {
@@ -390,8 +323,8 @@ strong {
   font-size: 3rem;
   margin-bottom: 5rem;
   position: relative;
-  display: inline-block; /* Pour centrer le pseudo-élément */
-  color: var(--text-color-dark);
+  display: inline-block; 
+  color: var(--md-sys-color-on-surface);
 }
 
 .section-title::after {
@@ -402,65 +335,37 @@ strong {
   transform: translateX(-50%);
   width: 100px;
   height: 5px;
-  background: var(--primary-gradient);
+  background: var(--md-sys-color-primary); 
   border-radius: 3px;
 }
 
-/* Feature Pillar - Split Layout */
 .feature-pillar {
   display: flex;
   align-items: center;
-  gap: 4rem; /* Espace entre texte et visuel */
+  gap: 4rem; 
   margin-bottom: 7rem;
   padding: 3rem;
-  background-color: var(--bg-section-alt); /* Fond légèrement différent pour le contraste */
-  border-radius: var(--border-radius-large);
+  border-radius: var(--md-sys-shape-corner-large);
   transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
-}
-
-.feature-pillar:last-of-type {
-  margin-bottom: 0;
 }
 
 .feature-pillar:hover {
   transform: translateY(-8px);
-
-}
-
-.pillar-content {
-  flex: 1;
-  max-width: 50%; /* Limite la largeur du texte */
-}
-
-.pillar-visual {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 50%;
-}
-
-/* Inverser l'ordre des éléments pour l'alternance */
-.feature-pillar.reverse {
-  flex-direction: row-reverse;
-}
-.feature-pillar.reverse .pillar-visual {
-  justify-content: center;
 }
 
 .pillar-number {
-  font-size: 4.5rem; /* Grand numéro distinctif */
+  font-size: 4.5rem; 
   font-weight: 800;
   opacity: 0.8;
   line-height: 1;
   margin-bottom: 1.5rem;
-  display: block; /* Pour que margin-bottom fonctionne */
+  display: block; 
 }
 
 .pillar-title {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: var(--text-color-dark);
+  color: var(--md-sys-color-on-surface);
 }
 
 .pillar-description {
@@ -468,37 +373,41 @@ strong {
   line-height: 1.7;
 }
 
-/* Grand icône SVG stylisée */
 .feature-icon-lg {
   width: 280px;
   height: 280px;
-  max-width: 100%; /* S'assure qu'il ne déborde pas */
-  opacity: 0.9;
-  transform: rotate(-5deg); /* Légère inclinaison pour le dynamisme */
-  transition: transform 0.6s ease, opacity 0.6s ease;
-  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.1)); /* Légère ombre */
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.1)); 
 }
 
-.feature-pillar:hover .feature-icon-lg {
-  transform: rotate(0deg) scale(1.03); /* Se redresse et s'agrandit légèrement au survol */
-  opacity: 1;
-}
-
-/* Call to Action Final Section */
 .cta-final-section {
   padding: 8rem 0;
   background: linear-gradient(138deg, #bdf0fe, #e1ffdf);
   text-align: center;
-  position: relative;
   height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
-
+.cta-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  
+}
 .cta-title {
   font-size: 3rem;
+  /* CORRECTION: Utilisation d'une valeur fixe pour 1.5rem */
   margin-bottom: 1.5rem;
-  color: var(--text-color-light);
+  /* CORRECTION: Remplacé --text-color-light par --md-sys-color-on-surface */
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Animations au scroll (conservées) */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
 .cta-subtitle {
@@ -548,7 +457,6 @@ strong {
 
   /* Hero Section */
   .hero-content-wrapper {
-    flex-direction: column;
     text-align: center;
     gap: 3rem;
   }
@@ -628,94 +536,6 @@ strong {
   h3 { font-size: 1.5rem; }
   p { font-size: 1rem; }
 
-  /* Header */
-  .app-header {
-    height: 60px; /* Hauteur fixe pour mobile */
-    box-shadow: var(--shadow-light); /* Toujours un peu d'ombre sur mobile */
-    backdrop-filter: blur(12px);
-  }
-  .app-header.scrolled {
-    height: 60px; /* Assurer que la hauteur reste la même */
-  }
-
-  
-  .logo-text {
-    font-size: 1.5rem;
-  }
-  .app-header.scrolled .logo-text {
-    font-size: 1.5rem; /* Pas de changement de taille au scroll sur mobile */
-  }
-
-
-  .menu-toggle {
-    display: flex; /* Afficher le burger sur mobile */
-  }
-  /* Animation du burger ouvert */
-  .menu-toggle.open .icon-bar:nth-child(1) {
-    transform: translateY(10.5px) rotate(45deg);
-  }
-  .menu-toggle.open .icon-bar:nth-child(2) {
-    opacity: 0;
-  }
-  .menu-toggle.open .icon-bar:nth-child(3) {
-    transform: translateY(-10.5px) rotate(-45deg);
-  }
-
-  .nav-menu {
-    position: fixed; /* Fixer le menu pour qu'il prenne tout l'écran */
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--bg-header-default); /* Fond du menu mobile */
-    backdrop-filter: blur(20px);
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transform: translateX(100%); /* Masqué par défaut */
-    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0); /* Animation douce */
-    opacity: 0;
-    pointer-events: none; /* Empêche les clics quand le menu est masqué */
-    gap: 2.5rem; /* Espacement plus grand pour les liens */
-  }
-
-  .nav-menu.open {
-    transform: translateX(0); /* Afficher le menu */
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .nav-menu li {
-    width: 80%; /* Largeur des éléments du menu */
-    text-align: center;
-    opacity: 0; /* Masqué initialement pour animation */
-    transform: translateY(20px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-  }
-
-  .nav-menu.open li {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .nav-menu.open li:nth-child(1) { transition-delay: 0.1s; }
-  .nav-menu.open li:nth-child(2) { transition-delay: 0.15s; } /* Fonctionnalités */
-  .nav-menu.open li:nth-child(3) { transition-delay: 0.2s; } /* Forum */
-  .nav-menu.open li:nth-child(4) { transition-delay: 0.25s; } /* Profil ou Connexion */
-  .nav-menu.open li:nth-child(5) { transition-delay: 0.3s; } /* Déconnexion ou Inscription */
-  /* Ajustez les délais pour plus d'éléments si nécessaire */
-
-
-  .nav-menu li a,
-  .nav-button {
-    font-size: 1.5rem; /* Taille plus grande pour les liens du menu mobile */
-    display: block;
-    padding: 0.8rem 0;
-  }
-
-  .nav-button {
-    width: 100%; /* Les boutons prennent toute la largeur disponible */
-  }
-
   .content-wrapper {
     padding-top: 0px; /* Ajuster le padding pour mobile */
   }
@@ -732,7 +552,6 @@ strong {
 
   .btn {
     width: 100%;
-    padding: 0.8rem 1.5rem;
   }
 
   /* Features Section */

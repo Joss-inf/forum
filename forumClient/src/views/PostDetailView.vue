@@ -1,5 +1,5 @@
 <!-- src/views/PostDetailView.vue -->
-<script setup lang="ts" vapor>
+<script setup lang="ts"  >
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { usePost } from '@/composables/usePostDetail.ts'; 
@@ -10,7 +10,6 @@ const route = useRoute();
 const authStore = useAuthStore();
 const postId = Number(route.params.id);
 
-// On appelle le composable qui nous fournit toute la logique et l'état.
 const {
   post,
   comments,
@@ -65,8 +64,6 @@ const {
   </div>
 </template>
 
-
-    
 <style scoped>
 .post-detail-view {
   width: 100%;
@@ -81,6 +78,7 @@ const {
   margin-top: 100px;
   gap: 2rem;
   min-height: 100vh;
+  padding:10px
 }
 
 .post-card {
@@ -217,16 +215,15 @@ button:active .icon svg {
 /* Responsive */
 @media (max-width: 768px) {
 
-  .post-card {
-    padding: 2rem 1.5rem;
-  }
-
   .post-title {
     font-size: 1.5rem;
   }
 
   .post-footer {
     text-align: left;
+  }
+  .post-wrapper{
+    margin-top: 0px
   }
 }
 </style>

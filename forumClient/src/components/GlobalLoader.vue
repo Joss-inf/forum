@@ -14,7 +14,11 @@ const loadingStore = useLoadingStore();
   left: 0;
   height: 3px;
   width: 100%;
-  background: linear-gradient(to right, #4a90e2, #357ABD);
+  background: linear-gradient(
+    to right, 
+    var(--md-sys-color-primary), 
+    hsl(210, 80%, 45%) 
+  );
   animation: loading 1.5s linear infinite;
   z-index: 9999;
 }

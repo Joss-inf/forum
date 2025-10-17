@@ -1,31 +1,7 @@
 // src/composables/useAuthValidation.ts
 import { ref, computed } from 'vue';
 import type { Ref } from 'vue';
-
-// Définir une interface pour la structure générique d'un formulaire d'authentification
-// Les propriétés sont optionnelles car tous les formulaires n'auront pas tous les champs.
-interface AuthForm {
-  username?: string;
-  email?: string; // Rendu optionnel pour flexibilité (ex: formulaire de login sans email de confirmation)
-  confirmEmail?: string;
-  password?: string;
-  confirmPassword?: string;
-  currentPassword?: string; // Ajouté pour le changement de mot de passe
-  newPassword?: string; // Ajouté pour le changement de mot de passe
-  confirmNewPassword?: string; // Ajouté pour la confirmation du nouveau mot de passe
-}
-
-// Interface pour les erreurs de validation
-interface ValidationErrors {
-  username?: string;
-  email?: string;
-  confirmEmail?: string;
-  password?: string;
-  confirmPassword?: string;
-  currentPassword?: string;
-  newPassword?: string;
-  confirmNewPassword?: string;
-}
+import type { AuthForm, ValidationErrors } from '@/types'
 
 /**
  * Composable pour gérer la validation des formulaires d'authentification.
@@ -34,6 +10,7 @@ interface ValidationErrors {
  * @returns Un objet contenant les erreurs de validation, les fonctions de validation individuelles,
  * une fonction pour valider tous les champs, et un computed pour la validité globale.
  */
+
 export function useAuthValidation(form: Ref<AuthForm>) {
   const validationErrors: Ref<ValidationErrors> = ref({});
 
@@ -153,7 +130,7 @@ export function useAuthValidation(form: Ref<AuthForm>) {
     validateConfirmEmail,
     validatePassword,
     validateConfirmPassword,
-    validateCurrentPassword, // Exposer cette fonction aussi
+    validateCurrentPassword, 
     validateAllFields,
     isFormValid,
   };

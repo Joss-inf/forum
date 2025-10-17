@@ -8,6 +8,7 @@ import CreatePostForm from '@/components/CreatePostForm.vue';
 import ForumMenu from '@/components/ForumMenu.vue';
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
 
+
 const authStore = useAuthStore();
 const isCreating = ref(false);
 
@@ -16,7 +17,7 @@ const {
   isLoading,
   error,
   searchQuery,
-  selectedTag, // <-- Récupérer les nouvelles refs
+  selectedTag, 
   sortOrder,
   availableTags,
   hasMorePosts,
@@ -83,6 +84,7 @@ function handlePostCreated(newPost: Post) {
       Chargement...
     </div>
   </div>
+  
 </template>
 
 <style scoped>
@@ -91,9 +93,9 @@ function handlePostCreated(newPost: Post) {
 }
 
 .forum-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0.5rem auto;
-  padding: 0 1rem;
+  padding: 0 10px;
   min-height: 100vh;
 }
 
@@ -109,9 +111,9 @@ function handlePostCreated(newPost: Post) {
 }
 
 .post-item {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--md-sys-color-outline);
   padding: 1rem;
-  background-color: #fff;
+  background-color: var(--md-sys-color-surface-bright);
   transition: transform 0.2s, box-shadow 0.2s;
   overflow-wrap: break-word;
 }
@@ -127,7 +129,7 @@ function handlePostCreated(newPost: Post) {
 
 .post-meta {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .author {
@@ -137,23 +139,26 @@ function handlePostCreated(newPost: Post) {
   display: flex;
   background: #0000000d;
   width: fit-content;
-  color: white;
+  color: var(--md-sys-color-on-surface); 
   padding: 2px 8px;
   font-weight: bold;
   border-radius: 50px 50px 50px 0;
   justify-content: center;
   align-items: center;
   margin-top: 5px;
-  color: #515151;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .load-more-container {
   text-align: center;
   margin: 1rem 0;
 }
+button{
 
+  padding: 1rem;
+}
 .loading-state, .loading-more, .empty-state {
   text-align: center;
   margin: 1rem 0;
-  color: #6b7280;
+  color: var(--md-sys-color-on-surface-variant);
 }
 </style>

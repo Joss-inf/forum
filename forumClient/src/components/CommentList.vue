@@ -62,7 +62,7 @@ async function deleteComment(commentId: number) {
 <style scoped>
 /* Conteneur principal de la liste de commentaires */
 .comment-list-container {
-  margin-top: 2rem;
+  margin-top: 2rem; 
 }
 
 /* Liste de commentaires */
@@ -74,25 +74,25 @@ async function deleteComment(commentId: number) {
 
 /* Élément de commentaire individuel */
 .comment-item {
-  background-color: #ffffff; /* Fond blanc pur pour le contraste */
-  border: 1px solid #e9ecef; /* Bordure très fine et subtile */
-  padding: 1.5rem;
+  background-color: var(--md-sys-color-surface-bright); 
+  border: 1px solid var(--md-sys-color-outline-variant); 
+  padding: 1.5rem; 
   margin-bottom: 1.2rem;
-  border-radius: 12px; /* Coins arrondis pour la douceur */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); /* Ombre légère pour la profondeur */
+  border-radius: var(--md-sys-shape-corner-medium); 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); 
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .comment-item:hover {
-  transform: translateY(-3px); /* Effet de survol subtil */
+  transform: translateY(-3px); 
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 /* Contenu du commentaire */
 .comment-content {
   margin-top: 0;
-  line-height: 1.6; /* Pour une meilleure lisibilité */
-  color: #333;
+  line-height: 1.6; 
+  color: var(--md-sys-color-on-surface);
 }
 
 /* Pied de page du commentaire (méta-données et bouton) */
@@ -102,27 +102,27 @@ async function deleteComment(commentId: number) {
   align-items: center;
   margin-top: 1rem;
   padding-top: 0.8rem;
-  border-top: 1px solid #f0f0f0; /* Séparateur discret */
+  border-top: 1px solid var(--md-sys-color-outline-variant); 
 }
 
 /* Méta-données (auteur, date) */
 .comment-meta {
   font-size: 0.9rem;
-  color: #777;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .author {
   font-weight: 600;
-  color: #555;
+  color: var(--md-sys-color-on-surface);
 }
 
 /* Bouton de suppression */
 .delete-button {
   background-color: transparent;
-  border: 1px solid #e74c3c; /* Rouge pour le danger */
-  color: #e74c3c;
+  border: 1px solid var(--md-sys-color-error); 
+  color: var(--md-sys-color-error);
   padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  border-radius: 6px; 
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -130,17 +130,16 @@ async function deleteComment(commentId: number) {
 }
 
 .delete-button:hover {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--md-sys-color-error);
+  color: var(--md-sys-color-on-error);
 }
 
 /* État vide */
 .empty-state {
-  color: #999;
+  color: var(--md-sys-color-on-surface-variant);
   padding: 2rem;
   text-align: center;
   font-style: italic;
   font-size: 1rem;
 }
-
 </style>

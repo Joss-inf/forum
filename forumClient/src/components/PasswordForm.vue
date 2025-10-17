@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useAuthValidation } from '@/composables/useAuthValidation';
 import BaseInput from '@/components/BaseInput.vue';
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
+import axios from 'axios';
 
 const authStore = useAuthStore();
 const passwordForm = ref({ currentPassword: '', newPassword: '', confirmNewPassword: '' });
@@ -24,9 +25,21 @@ const handleUpdate = async () => {
     try {
         await authStore.changePassword({ currentPassword: passwordForm.value.currentPassword, newPassword: passwordForm.value.newPassword });
         messages.success = 'Mot de passe mis à jour.';
-    } catch (err: any) {
-        messages.error = err.response?.data?.message || 'Erreur lors du changement de mot de passe.';
-    }
+    } catch (err: unknown) {
+if (axios.isAxiosError(err)) {
+  messages.error = new Error(
+    (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data
+      ? (err.response.data).message
+      : err.message) || err.message
+  ).toString();
+} else if (err instanceof Error) {
+  messages.error = err.toString();
+} else if (typeof err === 'string') {
+  messages.error = new Error(err).toString();
+} else {
+  messages.error = new Error('Erreur inconnue').toString();
+}
+    } 
 };
 </script>
 <template>
@@ -73,17 +86,17 @@ const handleUpdate = async () => {
 </template>
 <style scoped>
 .edit-form {
-  background-color: #fff;
-  border-radius: 8px;
+  background-color: var(--md-sys-color-surface-bright);
+  border-radius: var(--md-sys-shape-corner-medium);
   padding: 1.5rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .sub-title {
-  font-size: 1.3rem;
+  font-size: 1.3rem; 
   font-weight: 500;
-  color: #202124;
+  color: var(--md-sys-color-on-surface);
   margin-bottom: 1rem;
   text-align: center;
 }
@@ -97,13 +110,13 @@ const handleUpdate = async () => {
 }
 
 .message.success {
-  background-color: #e6f4ea;
-  color: #188038;
+  background-color: hsl(145, 63%, 95%); 
+  color: hsl(145, 63%, 30%);
 }
 
 .message.error {
-  background-color: #fce8e6;
-  color: #d93025;
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
 }
 
 /* Formulaire */
@@ -123,22 +136,14 @@ const handleUpdate = async () => {
 
 /* Boutons */
 .btn {
-  padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 6px; 
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.btn.primary {
-  background-color: #1a73e8;
-  color: #fff;
-}
-
-.btn.primary:hover {
-  background-color: #1669c2;
-}
+/* Bouton Primaire */
 
 .btn.primary:disabled {
   opacity: 0.6;
@@ -146,15 +151,14 @@ const handleUpdate = async () => {
 }
 
 .btn.secondary {
-  background-color: #f1f3f4;
-  color: #202124;
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
 }
 
 .btn.secondary:hover {
-  background-color: #e8eaed;
+  background-color: var(--md-sys-color-surface-container-high);
 }
 
-/* Accent visuel pour le formulaire de mot de passe */
 .password-form input[type="password"] {
   letter-spacing: 0.05em;
 }

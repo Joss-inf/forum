@@ -1,62 +1,50 @@
-// src/composables/useCommentSubmit.ts
-import { ref } from 'vue';
-import apiClient from '@/services/apiClient';
-import type { Comment } from '@/types';
+import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth';
+import { useApi } from '@/composables/useApi'
+import type { Comment, UseCommentSubmitOptions } from '@/types'
 
-// 1. Définir et exporter la constante de limite
-export const COMMENT_MAX_LENGTH = 1000;
 
-interface UseCommentSubmitOptions {
-  postId: number;
-  onSuccess?: (comment: Comment) => void;
-}
+export const COMMENT_MAX_LENGTH = 1000
 
 export function useCommentSubmit({ postId, onSuccess }: UseCommentSubmitOptions) {
-  const authStore = useAuthStore();
-  const content = ref('');
-  const isLoading = ref(false);
-  const error = ref<string | null>(null);
+  const authStore = useAuthStore()
+  const content = ref('')
 
-  async function submitComment() {
-    error.value = null;
+  // Crée un composable useApi pour le POST
+  const { data, loading, error, execute } = useApi<Comment>(`/posts/${postId}/comments`, {
+    method: 'POST',
+    data: { content: '' }, // placeholder, sera remplacé dynamiquement
+  })
 
-    // 2. Ajouter la logique de validation
+  const submitComment = async () => {
+    // Validation
     if (!content.value.trim()) {
-      error.value = 'Le commentaire ne peut pas être vide.';
-      return;
+      error.value = new Error('Le commentaire ne peut pas être vide.')
+      return
     }
     if (content.value.length > COMMENT_MAX_LENGTH) {
-      error.value = `Le commentaire ne doit pas dépasser ${COMMENT_MAX_LENGTH} caractères.`;
-      return;
+      error.value = new Error(`Le commentaire ne doit pas dépasser ${COMMENT_MAX_LENGTH} caractères.`)
+      return
     }
 
-    isLoading.value = true;
-    try {
-      const response = await apiClient.post<Comment>(`/posts/${postId}/comments`, { content: content.value });
-      
-      const newComment: Comment = {
-        ...response.data,
-        author_username: authStore.user?.username || 'Vous'
-      };
+    // Execute le POST avec le contenu dynamique
+    await execute({ data: { content: content.value } })
 
-      // Appeler le callback de succès si fourni
-      if (onSuccess) {
-        onSuccess(newComment);
+    if (!error.value && data.value) {
+      const newComment: Comment = {
+        ...data.value,
+        author_username: authStore.user?.username || 'Vous',
       }
-      
-      content.value = ''; // Vider le champ après succès
-    } catch (err: any) {
-      error.value = err.response?.data?.message || 'Erreur lors de l\'envoi du commentaire.';
-    } finally {
-      isLoading.value = false;
+
+      onSuccess?.(newComment)
+      content.value = '' // reset
     }
   }
 
   return {
     content,
-    isLoading,
+    isLoading: loading,
     error,
-    submitComment
-  };
+    submitComment,
+  }
 }

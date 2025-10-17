@@ -1,131 +1,103 @@
 // src/store/auth.ts
-import { defineStore } from 'pinia';
-import { ref, computed, nextTick } from 'vue';
-import type { Ref, ComputedRef } from 'vue';
-import apiClient from '@/services/apiClient'; // Assurez-vous que ce chemin est correct
-import router from '@/router'; // Assurez-vous que ce chemin est correct
-import type { User, LoginCredentials, RegisterData } from '@/types'; // Assurez-vous que ces types sont définis
+import { defineStore } from 'pinia'
+import { ref, computed, type Ref, type ComputedRef } from 'vue'
+import { useRouter } from 'vue-router'
+import { useApi } from '@/composables/useApi'
+import type { User, LoginCredentials, RegisterData } from '@/types'
 
 export const useAuthStore = defineStore('auth', () => {
+  const router = useRouter()
+
   // --- STATE ---
-  const user: Ref<User | null> = ref(null);
+  const user: Ref<User | null> = ref(null)
+  const isAuthenticated: ComputedRef<boolean> = computed(() => !!user.value)
+  const userRole: ComputedRef<string | null> = computed(() => user.value?.role ?? null)
 
-  // --- GETTERS ---
-  const isAuthenticated: ComputedRef<boolean> = computed(() => !!user.value);
-  const userRole: ComputedRef<string | null> = computed(() => user.value?.role ?? null);
-
-  // --- ACTIONS ---
-
-  /**
-   * Tente de récupérer les informations de l'utilisateur connecté.
-   * Le navigateur enverra automatiquement le cookie d'authentification.
-   */
+  // --- FETCH CURRENT USER ---
   async function fetchUser() {
-    try {
-      const response = await apiClient.get<User>('/users/me'); // Endpoint pour récupérer le profil de l'utilisateur connecté
-      user.value = response.data;
-      console.log('User fetched:', user.value)
-
-    } catch (err: any){
-      user.value = null;
-      // Les route guards ou d'autres logiques peuvent gérer la redirection si nécessaire.
-    }
+    const { data, error, execute } = useApi<User>('/users/me', { method: 'GET' })
+    await execute()
+    if (data.value) user.value = data.value
+    else if (error.value) user.value = null
   }
 
-  /**
-   * Gère la connexion de l'utilisateur.
-   */
+  // --- LOGIN ---
   async function login(credentials: LoginCredentials) {
-    try {
-      await apiClient.post<{ user: User }>('/auth/login', credentials);
-      await fetchUser();
-    } catch (err: any) {
-      throw err;
-    }
+    const { error, execute } = useApi<{ user: User }>('/auth/login', {
+      method: 'POST',
+      data: credentials
+    })
+    await execute()
+    if (!error.value) await fetchUser()
+    else throw error.value
   }
 
-  /**
-   * Gère l'enregistrement de l'utilisateur.
-   */
+  // --- REGISTER ---
   async function register(userData: RegisterData) {
+    const { error, execute } = useApi('/auth/register', {
+      method: 'POST',
+      data: userData
+    })
+    await execute()
+    if (error.value) throw error.value
+  }
+
+  // --- LOGOUT ---
+  async function logout() {
     try {
-      await apiClient.post('/auth/register', userData);
-      // Après l'inscription, tu peux choisir de connecter l'utilisateur automatiquement
-      // ou le laisser se connecter manuellement. Ici, on ne fait rien de plus.
-    } catch (err: any) {
-      throw err;
+      const { error, execute } = useApi('/auth/logout', {
+        method: 'POST',
+        data: { userId: user.value?.id }
+      })
+      await execute()
+      if (error.value) console.warn('Erreur côté serveur:', error.value)
+    } finally {
+      user.value = null
+      await router.push('/login')
     }
   }
 
-  /**
-   * Gère la déconnexion de l'utilisateur.
-   */
-  async function logout() {
-  try {
-    await apiClient.post('/auth/logout', { userId: user.value });
-  } catch (err) {
-    console.warn('Erreur lors du logout côté serveur :', err);
-  } finally {
-    user.value = null;
-    await router.push('/login');
-  }
-}
-
-  /**
-   * Initialise l'état d'authentification au démarrage de l'application.
-   */
+  // --- INITIALIZATION ---
   async function initializeAuth() {
     try {
-      await fetchUser();
-    } catch (err: any) {
-      // Gérer l'erreur si initializeAuth échoue (par ex. le serveur n'est pas accessible)
-      console.error("Erreur lors de l'initialisation de l'authentification:", err);
-      // Ne pas propager l'erreur ici pour ne pas bloquer le démarrage de l'app
+      await fetchUser()
+    } catch (err) {
+      console.error('Erreur lors de l\'initialisation de l\'auth:', err)
     }
   }
 
-  /**
-   * Met à jour le profil de l'utilisateur.
-   * @param profileData Les données du profil à mettre à jour (username, email).
-   */
+  // --- UPDATE PROFILE ---
   async function updateProfile(profileData: { username: string; email: string }) {
-    try {
-      // Envoie les données mises à jour au backend
-      const response = await apiClient.put<User>('/users/profile', profileData); // Endpoint de mise à jour du profil
-      user.value = response.data; // Met à jour l'état de l'utilisateur dans le store avec les nouvelles données
-    } catch (err: any) {
-      console.error('Erreur lors de la mise à jour du profil:', err);
-      throw err; // Propage l'erreur au composant pour affichage
-    }
+    const { data, error, execute } = useApi<User>('/users/profile', {
+      method: 'PUT',
+      data: profileData
+    })
+    await execute()
+    if (data.value) user.value = data.value
+    else if (error.value) throw error.value
   }
 
-  /**
-   * Change le mot de passe de l'utilisateur.
-   * @param passwordData Les données du mot de passe (currentPassword, newPassword).
-   */
+  // --- CHANGE PASSWORD ---
   async function changePassword(passwordData: { currentPassword: string; newPassword: string }) {
-    try {
-      // Envoie les données du mot de passe au backend
-      await apiClient.put('/users/change-password', passwordData); // Endpoint de changement de mot de passe
-      // Pas de mise à jour de l'état 'user' ici, car le mot de passe n'est pas dans l'objet user public.
-    } catch (err: any) {
-      console.error('Erreur lors du changement de mot de passe:', err);
-      throw err; // Propage l'erreur au composant pour affichage
-    }
+    const { error, execute } = useApi('/users/change-password', {
+      method: 'PUT',
+      data: passwordData
+    })
+    await execute()
+    if (error.value) throw error.value
   }
 
+  // --- RETURN ---
   return {
-
     user,
     isAuthenticated,
     userRole,
-
+    fetchUser,
     login,
     register,
     logout,
     initializeAuth,
-    fetchUser,
-    updateProfile, 
-    changePassword, 
-  };
-});
+    updateProfile,
+    changePassword
+  }
+})

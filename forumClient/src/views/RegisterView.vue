@@ -36,20 +36,23 @@ const error = ref<string | null>(null);
 
 // --- Gestion de l'inscription ---
 async function handleRegister() {
-  error.value = null;
-  validateAllFields();
+  error.value = null
+  validateAllFields()
 
-  if (!isFormValid.value) {
-    return;
-  }
+  if (!isFormValid.value) return
 
-  try {
-    await authStore.register(form.value);
-    await router.push('/login');
-  } catch (err: any) {
-    error.value = err.response?.data?.message || 'Une erreur est survenue lors de l\'inscription.';
+  // Appel au store
+  await authStore.register(form.value)
+
+  // Vérifie si l'inscription a échoué
+  if (authStore.user) {
+ 
+    await router.push('/login')
+  } else {
+    error.value = 'Une erreur est survenue lors de l\'inscription.'
   }
 }
+
 </script>
 
 <template>
@@ -138,7 +141,7 @@ async function handleRegister() {
   align-items: center;
   min-height: 100vh;
   min-width: 50vw;
-  padding: 2rem;
+  padding: 10px;
   box-sizing: border-box;
   animation: fadeInBackground 1.5s ease-out forwards;
   order: 1;
@@ -149,12 +152,10 @@ async function handleRegister() {
   to { background-position: 100% 50%; opacity: 1; }
 }
 
-
-
 .auth-form {
-   background: var(--md-sys-color-on-primary);
+  background: var(--md-sys-color-surface-bright);
   padding: 3rem 2.5rem;
-  border-radius: 16px;
+  border-radius: var(--md-sys-shape-corner-large);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   animation: slideIn 0.8s ease-out forwards;
@@ -168,9 +169,9 @@ async function handleRegister() {
 }
 
 .auth-form h1 {
-  font-size: 2.5rem;
+  font-size: var(--md-sys-typescale-headline-medium-size); 
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--md-sys-color-primary);
   margin:0;
   margin-bottom: 0.5rem;
   text-align: center;
@@ -181,9 +182,9 @@ async function handleRegister() {
   width: 100%;
   padding: 1.1rem;
   border: none;
-  border-radius: 10px;
-  background: #e0e6ed;
-  color: #7f8c8d;
+  border-radius: 10px; 
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface-variant);
   font-size: 1.15rem;
   font-weight: 600;
   cursor: pointer;
@@ -191,7 +192,7 @@ async function handleRegister() {
   letter-spacing: 0.8px;
   text-transform: uppercase;
   margin-top: 1rem;
-  border-radius: 100px;
+  border-radius: var(--md-sys-shape-corner-full);
 }
 
 .submit-button:hover {
@@ -200,8 +201,9 @@ async function handleRegister() {
 }
 
 .submit-button:disabled {
-  background-color: #ccc;
-  color: #999;
+
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
@@ -211,7 +213,7 @@ async function handleRegister() {
 @media (max-width: 600px) {
   .auth-form {
     padding: 2.5rem 1.5rem;
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
   }
 
   .auth-form h1 {

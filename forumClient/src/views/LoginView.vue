@@ -1,27 +1,35 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
-import type { Ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
+import { nextTick, ref, type Ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 import BaseInput from '@/components/BaseInput.vue'
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
 
-const authStore = useAuthStore();
-const router = useRouter();
-const form = ref({ email: '', password: '' });
-const error: Ref<string | null> = ref(null);
+const authStore = useAuthStore()
+const router = useRouter()
+
+const form = ref({ email: '', password: '' })
+const error: Ref<string | null> = ref(null)
+const isLoading = ref(false)
 
 async function handleLogin() {
-  try {
-    error.value = null;
-    await authStore.login(form.value);
-    await nextTick();
-    router.push('/forum'); // Redirige vers le forum après connexion réussie
-  } catch (err: any) {
-    error.value = err.response?.data?.message || 'Email ou mot de passe incorrect.';
+  error.value = null
+  isLoading.value = true
+
+  await authStore.login(form.value)
+
+  if (!authStore.user) {
+    error.value = 'Email ou mot de passe incorrect.'
+    isLoading.value = false
+    return
   }
+
+  await nextTick()
+  router.push('/forum')
+  isLoading.value = false
 }
 </script>
+
 
 <template>
   <div class="auth-page">
@@ -68,7 +76,7 @@ async function handleLogin() {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 10px;
   box-sizing: border-box;
   animation: fadeInBackground 1.5s ease-out forwards; /* Animation d'apparition du fond */
 }
@@ -93,7 +101,7 @@ async function handleLogin() {
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
-  animation: slideIn 0.8s ease-out forwards; /* Animation d'apparition du formulaire */
+  animation: slideIn 0.8s ease-out forwards; 
   width: 100%;
   max-width: 440px;
 }
@@ -107,12 +115,12 @@ async function handleLogin() {
 
 /* Titre du formulaire */
 .auth-form h1 {
-  font-size: 2.5rem; /* Plus grand et plus impactant */
+  font-size: 2.5rem; 
   font-weight: 700;
-  color: var(--primary-color); /* Utilise la couleur primaire */
+  color: var(--primary-color); 
   margin-bottom: 0.5rem;
   text-align: center;
-  letter-spacing: 1px; /* Espacement des lettres pour un look moderne */
+  letter-spacing: 1px; 
 }
 
 .auth-form .subtitle {
@@ -130,36 +138,36 @@ async function handleLogin() {
 /* Bouton de soumission */
 .submit-button {
   width: 100%;
-  padding: 1.1rem; /* Plus de padding */
+  padding: 1.1rem; 
   border: none;
-  border-radius: 10px; /* Coins plus arrondis */
-  background:  #e0e6ed; /* Dégradé pour le bouton */
+  border-radius: 10px; 
+  background:  #e0e6ed; 
   color: #7f8c8d;
-  font-size: 1.15rem; /* Plus grand */
+  font-size: 1.15rem; 
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  letter-spacing: 0.8px; /* Espacement des lettres */
-  text-transform: uppercase; /* Texte en majuscules */
+  letter-spacing: 0.8px; 
+  text-transform: uppercase; 
   border-radius: 100px;
 }
 
 .submit-button:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
-  transform: translateY(-3px); /* Effet 3D léger */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); 
+  transform: translateY(-3px);
 }
 
 .submit-button:active {
-  transform: translateY(0); /* Retour à la position normale */
+  transform: translateY(0); 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Option "mot de passe oublié" et "s'inscrire" */
+
 .form-links {
   margin-top: 2rem;
   text-align: center;
-  display: flex; /* Pour aligner les liens */
-  justify-content: space-around; /* Pour espacer les liens */
+  display: flex; 
+  justify-content: space-around; 
 }
 
 .form-links a {
@@ -177,10 +185,7 @@ async function handleLogin() {
 
 /* Media queries pour la réactivité */
 @media (max-width: 600px) {
-  .auth-form {
-    padding: 2.5rem 1.5rem;
-    border-radius: 12px;
-  }
+
   .auth-form h1 {
     font-size: 2rem;
   }
@@ -191,8 +196,6 @@ async function handleLogin() {
   .submit-button {
     padding: 0.9rem;
   }
-  .auth-page {
-    padding: 1rem;
-  }
+  
 }
 </style>

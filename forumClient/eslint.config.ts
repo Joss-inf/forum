@@ -1,21 +1,24 @@
-import { globalIgnores } from 'eslint/config'
+// eslint.config.js or eslint.config.ts
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import pluginVue from 'eslint-plugin-vue'
 import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 
-// To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
-// import { configureVueProject } from '@vue/eslint-config-typescript'
-// configureVueProject({ scriptLangs: ['ts', 'tsx'] })
-// More info at https://github.com/vuejs/eslint-config-typescript/#advanced-setup
-
 export default defineConfigWithVueTs(
+  // The helper function expects a series of valid config objects.
+  // The first object for files is correct.
+  
   {
-    name: 'app/files-to-lint',
+    // @ts-ignore
     files: ['**/*.{ts,mts,tsx,vue}'],
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
+  // This is the corrected part.
+  // Global ignores must be inside an object with an `ignores` key.
+  {
+    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
+  },
 
+  // The rest of your configurations
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
   skipFormatting,

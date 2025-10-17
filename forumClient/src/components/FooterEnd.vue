@@ -56,39 +56,38 @@
 
 /* --- Footer Global --- */
 .main-footer {
- 
-  background-color: var(--bg-color-light, #f8f9fa); 
+  background-color: var(--md-sys-color-surface-container-low); 
   padding: 3rem 0;
   font-size: 0.9rem;
-  color: var(--text-color-dark, #333); 
+  color: var(--md-sys-color-on-surface-variant); 
 }
 
 /* --- Conteneur Principal (grille) --- */
 .footer-container {
-  max-width: 1200px; /* Taille de votre conteneur global */
+  max-width: 1200px; 
   margin: 0 auto;
   padding: 0 1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 2.5rem; /* Espace plus généreux entre les colonnes */
+  gap: 2.5rem; 
 }
 
 /* --- Sections (colonnes) --- */
 .footer-section {
-  flex: 1 1 220px; /* Plus grand pour l'espace */
-  min-width: 180px; /* Minimum de 180px pour les petites sections */
+  flex: 1 1 220px; 
+  min-width: 180px; 
 }
 
 .about-section {
-  flex: 1 1 250px; /* Un peu plus d'espace pour la section À propos */
+  flex: 1 1 250px; 
 }
 
 .footer-section h4 {
   font-size: 1.1rem;
   margin-bottom: 1.2rem;
   font-weight: 600;
-  color: var(--text-color-dark, #333);
+  color: var(--md-sys-color-on-surface);
 }
 
 .footer-section ul {
@@ -105,27 +104,25 @@
 /* --- Liens --- */
 .footer-section a, 
 .footer-section p {
-  color: var(--text-muted, #6c757d);
+  color: var(--md-sys-color-on-surface-variant);
   text-decoration: none;
 }
 
 .footer-section a:hover {
-  color: var(--text-color-light, #007bff);
+  color: var(--md-sys-color-primary);
   text-decoration: underline;
 }
 
-/* --- Partie du bas (Copyright et Sociaux) --- */
 .footer-bottom {
   width: 100%;
   margin-top: 3rem;
-  /* Utilise une couleur de bordure plus neutre ou basée sur une variable */
-  border-top: 1px solid rgba(0, 0, 0, 0.1); 
+  border-top: 1px solid var(--md-sys-color-outline); 
   padding-top: 1.5rem;
   text-align: center;
 }
 
 .copyright {
-  color: var(--text-muted, #6c757d);
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 /* --- Liens Sociaux --- */
@@ -139,34 +136,26 @@
 .social-links svg {
   width: 24px;
   height: 24px;
-  /* Assurez-vous que le fill utilise la même variable que les autres textes muted */
-  fill: var(--text-muted, #6c757d); 
+  fill: var(--md-sys-color-on-surface-variant); 
   transition: transform 0.3s ease, fill 0.3s ease;
 }
 
 .social-links a:hover svg {
   transform: translateY(-3px);
-  fill: #00c6ff; /* Couleur Vue.js/claire pour le hover */
+  fill: var(--md-sys-color-primary); 
 }
 
 /* --- Réactivité (Mobile) --- */
-@media (max-width: 992px) {
-  .footer-container {
-    /* Maintient les sections en grille sur tablette, mais avec moins d'espace */
-    justify-content: space-around;
-  }
-}
-
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 1.5rem; /* Réduit l'espace vertical entre les sections */
+    gap: 1.5rem; 
   }
 
   .footer-section {
-    flex: 1 1 100%; /* Prend toute la largeur */
+    flex: 1 1 100%; 
     min-width: unset;
   }
 

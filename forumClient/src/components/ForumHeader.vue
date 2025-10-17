@@ -1,4 +1,4 @@
-<script setup lang="ts" vapor >
+<script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
@@ -41,12 +41,13 @@ const isMenuOpen = ref(false);
 </template>
 <style lang="css" scoped>
 .app-header {
-
   width: 100%;
-  height: 60px;
-  background-color: #fff;
-  border-bottom: 1px solid var(--border-color);
+  height: 60px; 
+  background-color: var(--md-sys-color-surface-bright);
+  border-bottom: 1px solid var(--md-sys-color-outline);
   z-index: 1000;
+  position: sticky;
+  top: 0;
 }
 
 .nav-bar {
@@ -60,11 +61,11 @@ const isMenuOpen = ref(false);
 
 .nav-logo a {
   font-weight: bold;
-  font-size: 1.3rem;
-  color: var(--primary-color);
+  font-size: 1.3rem; 
+  color: var(--md-sys-color-primary);
   text-decoration: none;
   position: absolute;
-  top: 25%;
+  top: 25%; 
 }
 
 .menu-toggle {
@@ -73,7 +74,7 @@ const isMenuOpen = ref(false);
   border: none;
   font-size: 1.8rem;
   cursor: pointer;
-  color: var(--primary-color);
+  color: var(--md-sys-color-primary);
 }
 
 .nav-menu {
@@ -89,7 +90,7 @@ const isMenuOpen = ref(false);
 
 .nav-menu li a,
 .nav-button {
-  color: var(--text-color);
+  color: var(--md-sys-color-on-surface);
   text-decoration: none;
   padding: 0.5rem;
   font-weight: 500;
@@ -98,8 +99,8 @@ const isMenuOpen = ref(false);
 
 .nav-menu li a.router-link-exact-active {
   font-weight: bold;
-  color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
+  color: var(--md-sys-color-primary);
+  border-bottom: 2px solid var(--md-sys-color-primary);
 }
 
 /* Mobile Styles */
@@ -113,7 +114,7 @@ const isMenuOpen = ref(false);
     position: absolute;
     top: 60px;
     right: 0;
-    background-color: #fff;
+    background-color: var(--md-sys-color-surface-bright);
     flex-direction: column;
     width: 100%;
     overflow: hidden;
@@ -121,7 +122,7 @@ const isMenuOpen = ref(false);
     opacity: 0;
     visibility: hidden;
     padding: 0;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--md-sys-color-outline);
     transition:
       max-height 0.3s ease,
       opacity 0.3s ease,
@@ -130,7 +131,7 @@ const isMenuOpen = ref(false);
 }
 
   .nav-menu.open {
-    max-height: 500px; /* Doit être > hauteur réelle du menu */
+    max-height: 500px; 
     opacity: 1;
     visibility: visible;
     padding: 1rem 0;

@@ -52,32 +52,37 @@ const togglePasswordChange = () => { isChangingPassword.value = !isChangingPassw
 </template>
 
 <style scoped>
-/* Style inspiré Material / Google */
 
 .profile-page-container {
   display: flex;
   justify-content: center;
   align-items: center;
+ 
   padding: 2rem 1rem;
   min-height: 100vh;
   box-sizing: border-box;
+  
   font-family: 'Roboto', sans-serif;
 }
 
 .profile-card {
-  background-color: white;
-  border-radius: 8px;
+ 
+  background-color: var(--md-sys-color-surface-bright);
+ 
+  border-radius: var(--md-sys-shape-corner-medium);
   max-width: 480px;
   width: 100%;
   height: fit-content;
+
   padding: 2rem;
+ 
   box-shadow: 0px 2px 4px rgba(0,0,0,0.2), 0px 1px 1px rgba(0,0,0,0.14), 0px 1px 3px rgba(0,0,0,0.12);
 }
 
 .profile-title {
   font-size: 1.8rem;
   font-weight: 500;
-  color: #202124;
+  color: var(--md-sys-color-on-surface);
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -88,49 +93,49 @@ const togglePasswordChange = () => { isChangingPassword.value = !isChangingPassw
 
 .message {
   padding: 0.75rem 1rem;
-  border-radius: 4px;
+  border-radius: 4px; 
   font-size: 0.9rem;
   margin-bottom: 0.75rem;
 }
 
 .message.success {
-  background-color: #e6f4ea;
-  color: #188038;
+  background-color: hsl(145, 63%, 95%);
+  color: hsl(145, 63%, 30%);
 }
 
 .message.error {
-  background-color: #fce8e6;
-  color: #d93025;
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
 }
 
 .profile-info, .edit-form {
   margin-bottom: 1.5rem;
-  border: solid 1px #e0e0e0;
-  padding: 5px;
-  border-radius: 5px;
+  border: solid 1px var(--md-sys-color-outline-variant);
+  padding: 5px; 
+  border-radius: 5px; 
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .info-row .label {
-  color: #5f6368;
+  color: var(--md-sys-color-on-surface-variant);
   font-weight: 500;
 }
 
 .info-row .value {
-  color: #202124;
+  color: var(--md-sys-color-on-surface);
 }
 
 .sub-title {
   font-size: 1.2rem;
   font-weight: 500;
   margin-bottom: 1rem;
-  color: #202124;
+  color: var(--md-sys-color-on-surface);
 }
 
 .form-group {
@@ -140,7 +145,7 @@ const togglePasswordChange = () => { isChangingPassword.value = !isChangingPassw
 .form-group label {
   display: block;
   font-size: 0.9rem;
-  color: #3c4043;
+  color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 0.4rem;
 }
 
@@ -150,24 +155,23 @@ const togglePasswordChange = () => { isChangingPassword.value = !isChangingPassw
   width: fill-available;
   padding: 0.75rem;
   font-size: 1rem;
-  border: 1px solid #dadce0;
-  border-radius: 4px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 4px; 
   outline: none;
   transition: border-color 0.2s ease;
-  
 }
 
 .form-group input:focus {
-  border-color: #1a73e8;
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2); 
 }
 
 .input-error {
-  border-color: #d93025 !important;
+  border-color: var(--md-sys-color-error) !important;
 }
 
 .error-text {
-  color: #d93025;
+  color: var(--md-sys-color-error);
   font-size: 0.85rem;
   margin-top: 0.25rem;
 }
@@ -175,7 +179,7 @@ const togglePasswordChange = () => { isChangingPassword.value = !isChangingPassw
 .action-row {
   display: flex;
   justify-content: flex-end;
-  margin: 4px;
+  margin: 4px; 
 }
 
 .btn.primary {
@@ -183,19 +187,22 @@ const togglePasswordChange = () => { isChangingPassword.value = !isChangingPassw
 }
 
 .btn.secondary:hover {
-  background-color: #e8eaed;
+  background-color: var(--md-sys-color-surface-container-high);
 }
 
 .password-section {
   margin-top: 2rem;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
   padding-top: 1.5rem;
 }
 
 .loading-state {
   font-size: 1rem;
-  color: #5f6368;
+  color: var(--md-sys-color-on-surface-variant);
   text-align: center;
+}
+button{
+  padding:10px 
 }
 </style>
 

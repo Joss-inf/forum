@@ -1,4 +1,4 @@
-<script setup lang="ts" vapor >
+<script setup lang="ts"  >
 import { RouterView } from 'vue-router';
 import FooterEnd from './components/FooterEnd.vue';
 import HeaderStart from './components/ForumHeader.vue';

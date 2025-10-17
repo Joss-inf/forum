@@ -13,23 +13,23 @@ defineProps<{
 
 <style scoped>
 .message-alert {
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  border-radius: var(--md-sys-shape-corner-medium);
   font-size: 0.95rem;
-  margin-bottom: var(--space-lg);
+  margin-bottom: 1.5rem;
   border: 1px solid transparent;
 }
 
 .alert--success {
-  background-color: hsl(145, 63%, 95%); /* Fond pastel */
+  background-color: hsl(145, 63%, 95%); 
   color: hsl(145, 63%, 30%);
   border-color: hsl(145, 63%, 80%);
 }
 
 .alert--error {
-  background-color: hsl(0, 72%, 95%);
-  color: hsl(0, 72%, 40%);
-  border-color: hsl(0, 72%, 80%);
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+  border-color: var(--md-sys-color-error); 
 }
 
 .alert--warning {

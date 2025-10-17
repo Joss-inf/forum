@@ -1,43 +1,47 @@
 <script setup lang="ts">
-import { ref, reactive, nextTick, watch } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import { useAuthValidation } from '@/composables/useAuthValidation';
-import BaseInput from '@/components/BaseInput.vue';
+import { ref, reactive, nextTick, watch } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useAuthValidation } from '@/composables/useAuthValidation'
+import BaseInput from '@/components/BaseInput.vue'
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue'
-const authStore = useAuthStore();
-const formContainer = ref<HTMLElement | null>(null);
-const editForm = ref({ username: '', email: '', confirmEmail: '' });
-const messages = reactive({ success: null as string | null, error: null as string | null });
 
-const { validationErrors, validateUsername, validateEmail, validateConfirmEmail, validateAllFields, isFormValid } = useAuthValidation(editForm);
+const authStore = useAuthStore()
+const formContainer = ref<HTMLElement | null>(null)
+const editForm = ref({ username: '', email: '', confirmEmail: '' })
+const messages = reactive({ success: null as string | null, error: null as string | null })
 
+const { validationErrors, validateUsername, validateEmail, validateConfirmEmail, validateAllFields, isFormValid } = useAuthValidation(editForm)
+
+// Remplir le formulaire avec les données de l'utilisateur
 watch(() => authStore.user, (u) => {
   if (u) {
-    editForm.value.username = u.username;
-    editForm.value.email = u.email;
-    editForm.value.confirmEmail = u.email;
+    editForm.value.username = u.username
+    editForm.value.email = u.email
+    editForm.value.confirmEmail = u.email
   }
-}, { immediate: true });
+}, { immediate: true })
 
 const handleUpdate = async () => {
-  messages.success = null;
-  messages.error = null;
-  validateAllFields();
+  messages.success = null
+  messages.error = null
+  validateAllFields()
 
   if (!isFormValid.value) {
-    await nextTick();
-    const firstError = formContainer.value?.querySelector('.error-message');
-    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
+    await nextTick()
+    const firstError = formContainer.value?.querySelector('.error-message')
+    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    return
   }
 
-  try {
-    await authStore.updateProfile({ username: editForm.value.username, email: editForm.value.email });
-    messages.success = 'Profil mis à jour.';
-  } catch (err: any) {
-    messages.error = err.response?.data?.message || 'Erreur lors de la mise à jour.';
+  // --- Nouvelle version avec useApi intégré dans le store ---
+  await authStore.updateProfile({ username: editForm.value.username, email: editForm.value.email })
+
+  if (!authStore.user) {
+    messages.error = 'Erreur lors de la mise à jour.'
+  } else {
+    messages.success = 'Profil mis à jour.'
   }
-};
+}
 </script>
 
 <template>
@@ -85,17 +89,17 @@ const handleUpdate = async () => {
 
 <style scoped>
 .edit-form {
-  background-color: #fff;
-  border-radius: 8px;
+  background-color: var(--md-sys-color-surface-bright);
+  border-radius: var(--md-sys-shape-corner-medium);
   padding: 1.5rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .sub-title {
-  font-size: 1.3rem;
+  font-size: 1.3rem; 
   font-weight: 500;
-  color: #202124;
+  color: var(--md-sys-color-on-surface);
   margin-bottom: 1rem;
   text-align: center;
 }
@@ -103,19 +107,19 @@ const handleUpdate = async () => {
 /* Messages d’état */
 .message {
   padding: 0.75rem 1rem;
-  border-radius: 6px;
+  border-radius: 6px; 
   font-size: 0.9rem;
   margin-bottom: 1rem;
 }
 
 .message.success {
-  background-color: #e6f4ea;
-  color: #188038;
+  background-color: hsl(145, 63%, 95%); 
+  color: hsl(145, 63%, 30%);
 }
 
 .message.error {
-  background-color: #fce8e6;
-  color: #d93025;
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
 }
 
 /* Formulaire */
@@ -138,19 +142,12 @@ const handleUpdate = async () => {
   padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 6px; 
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.btn.primary {
-  background-color: #1a73e8;
-  color: #fff;
-}
-
-.btn.primary:hover {
-  background-color: #1669c2;
-}
+/* Bouton Primaire */
 
 .btn.primary:disabled {
   opacity: 0.6;
@@ -158,12 +155,12 @@ const handleUpdate = async () => {
 }
 
 .btn.secondary {
-  background-color: #f1f3f4;
-  color: #202124;
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
 }
 
 .btn.secondary:hover {
-  background-color: #e8eaed;
+  background-color: var(--md-sys-color-surface-container-high);
 }
 
 /* Responsive */

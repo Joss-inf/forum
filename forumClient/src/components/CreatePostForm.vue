@@ -19,7 +19,7 @@ const {
   newPost, 
   tags, 
   isLoading, 
-  error, 
+  createError, 
   createdPost, 
   handleSubmit 
 } = useCreatePost();
@@ -69,7 +69,7 @@ watch(createdPost, (newVal) => {
       required
     />
     <!-- L'affichage des erreurs est maintenant géré par la ref `error` du composable -->
-    <BaseMessageAlert v-if="error" :text="error" type="error" />
+    <BaseMessageAlert v-if="createError" :text="createError.toString()" type="error" />
     <button type="submit" :disabled="isLoading" class="submit-button">
       {{ isLoading ? 'Publication...' : 'Publier' }}
     </button>
@@ -77,24 +77,27 @@ watch(createdPost, (newVal) => {
 </template>
 
 <style scoped>
-/* J'ai rafraîchi le style pour un look plus moderne et espacé */
+
 .create-post-form {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  background-color: var(--md-sys-color-surface-bright);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-medium);
   padding: 2.5rem;
-  max-width: 800px;
   margin: 2rem auto;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
 }
 
 .form-title {
-  font-size: 1.75rem;
+  font-size: var(--md-sys-typescale-title-large-size); 
   font-weight: 600;
   margin-bottom: 2rem;
   text-align: center;
-  color: #1e293b;
+  color: var(--md-sys-color-on-surface);
 }
-
+button{
+  padding:10px;
+  margin-top:4px;
+  margin-left: auto;
+}
 </style>
     

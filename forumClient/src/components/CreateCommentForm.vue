@@ -4,14 +4,13 @@
 import { useCommentSubmit, COMMENT_MAX_LENGTH } from '@/composables/useCommentSubmit';
 import type { Comment } from '@/types';
 import BaseInput from '@/components/BaseInput.vue';
-import BaseButton from '@/components/buttons/BaseButton.vue';
 import BaseMessageAlert from '@/components/BaseMessageAlert.vue';
 
 const props = defineProps<{postId: number}>();
 const emit = defineEmits<{(e: 'comment-created', comment: Comment): void}>();
 
 const { content, isLoading, error, submitComment } = useCommentSubmit({
-  postId: props.postId,
+  postId: props.postId.toString(),
   onSuccess: (comment) => emit('comment-created', comment),
 });
 </script>
@@ -30,7 +29,7 @@ const { content, isLoading, error, submitComment } = useCommentSubmit({
       :maxlength="COMMENT_MAX_LENGTH"
     />
     
-    <BaseMessageAlert v-if="error" :text="error" type="error" />
+    <BaseMessageAlert v-if="error" :text="error.toString()" type="error" />
     
     <div class="form-actions">
       <button type="submit" :disabled="isLoading">
@@ -41,13 +40,12 @@ const { content, isLoading, error, submitComment } = useCommentSubmit({
 </template>
 
 <style scoped>
-/* 3. "Un petit CSS en plus" */
 .comment-form {
   margin-top: 2rem;
   padding: 1.5rem;
   background-color: #f8fafc;
   border-top: 1px solid #e2e8f0;
-  border-radius: 0 0 12px 12px; /* Arrondir seulement le bas pour s'intégrer */
+  border-radius: 0 0 12px 12px; 
 }
 
 .form-title {
@@ -59,7 +57,7 @@ const { content, isLoading, error, submitComment } = useCommentSubmit({
 
 .form-actions {
   display: flex;
-  justify-content: flex-end; /* Aligner le bouton à droite */
+  justify-content: flex-end; 
   margin-top: 1rem;
 }
 </style>

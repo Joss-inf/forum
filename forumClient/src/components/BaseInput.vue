@@ -58,11 +58,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import BaseMessageAlert from './BaseMessageAlert.vue';
-
-interface OptionType {
-  value: string | number | boolean;
-  label: string;
-}
+import type { OptionType } from '@/types';
 
 const props = withDefaults(defineProps<{
   id: string;
@@ -75,7 +71,7 @@ const props = withDefaults(defineProps<{
   autocomplete?: string;
   rows?: number;
   options?: OptionType[];
-  maxlength?: number; // <-- NOUVELLE PROP
+  maxlength?: number; 
 }>(), {
   type: 'text',
   modelValue: '',
@@ -106,7 +102,6 @@ const localSelectValue = computed(() => {
   return props.modelValue === null || props.modelValue === undefined ? '' : props.modelValue;
 });
 
-// NOUVELLES COMPUTED PROPS POUR LE COMPTEUR
 const characterCount = computed(() => String(props.modelValue || '').length);
 const isLimitReached = computed(() => 
   props.maxlength ? characterCount.value >= props.maxlength : false
@@ -143,7 +138,6 @@ function onBlur(event: FocusEvent) {
 </script>
 
 <style scoped>
-
 .label-wrapper {
   display: flex;
   justify-content: space-between;
@@ -154,18 +148,18 @@ function onBlur(event: FocusEvent) {
   display: block;
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--secondary-color);
+  color: var(--md-sys-color-on-surface);
 }
 
 /* NOUVEAU STYLE POUR LE COMPTEUR */
 .char-counter {
   font-size: 0.8rem;
-  color: #94a3b8; /* Gris neutre */
+  color: #94a3b8; 
   transition: color 0.3s ease;
 }
 
 .counter-limit {
-  color: #ef4444; /* Rouge quand la limite est atteinte */
+  color: #ef4444; 
   font-weight: 500;
 }
 
@@ -176,8 +170,8 @@ function onBlur(event: FocusEvent) {
   max-width: 100%;
   min-width: 100%;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--border-color);
-  background-color: var(--input-bg-color);
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface-container-low);
   font-size: 1rem;
   transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
   box-sizing: border-box;
@@ -189,18 +183,18 @@ function onBlur(event: FocusEvent) {
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
-  background-color: #fff;
+  box-shadow: 0 0 0 3px hsla(210, 80%, 55%, 0.2);
+  background-color: var(--md-sys-color-surface-bright);
 }
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-  color: var(--text-color-light);
+  color: var(--md-sys-color-on-surface-variant);
   opacity: 0.6;
 }
 
 .input-error {
-  border-color: red;
-  color: red;
+  border-color: var(--md-sys-color-error);
+  color: var(--md-sys-color-error);
 }
 </style>

@@ -9,7 +9,6 @@
           class="search-bar" 
           @keyup.enter="emit('search')"
         />
-        <!--  UTILISATION D'UN BOUTON NATIF -->
         <button 
           :disabled="!searchQueryModel" 
           class="search-button" 
@@ -91,12 +90,11 @@ const sortOptions = [
 </script>
 
 <style scoped>
-/* J'ajoute des styles de base pour que les boutons natifs ressemblent à quelque chose */
 .forum-header {
   margin-bottom: 0.5rem;
   padding: 1.5rem;
-  background-color: white;
-  border-radius: 50px 50px 0px 0px;
+  background-color: var(--md-sys-color-surface-bright);
+  border-radius: 50px 50px 0px 0px; 
 }
 .search-and-filters {
   width: 100%;
@@ -108,7 +106,7 @@ const sortOptions = [
 
 .search-bar {
   padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--md-sys-color-outline);
   border-radius: 4rem;
   font-size: 1rem;
   width: -moz-available;
@@ -126,7 +124,7 @@ const sortOptions = [
 /* --- STYLES POUR LES BOUTONS NATIFS --- */
 .search-button,
 .create-button {
-  border-radius: 8px;
+  border-radius: 8px; 
   font-weight: 600;
   font-size: 1rem;
   border: 1px solid transparent;
@@ -135,7 +133,7 @@ const sortOptions = [
 }
 
 .search-button {
-  background-color: #cacaca;
+  background-color: #cacaca; 
   color: #d7d7d9;
   border-radius: 0 15rem 15rem 0;
   width:60px;
@@ -151,8 +149,8 @@ const sortOptions = [
 }
 
 .create-button {
-  background-color: #34749f;
-  color: white;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
   font: inherit;
   flex: 1 1 150px;
 }
@@ -160,5 +158,4 @@ const sortOptions = [
   height: 40px;
   aspect-ratio: 1/1;
 }
-
 </style>
