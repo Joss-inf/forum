@@ -24,7 +24,6 @@ export async function getTagById(req, res, next) {
 export async function getAllTags(_req, res, next) {
   try {
     const tags = await TagService.getAllTags();
-    console.log(tags)
     res.status(200).json(tags);
   } catch (error) {
     next(error);
