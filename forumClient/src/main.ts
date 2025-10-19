@@ -25,6 +25,3 @@ window.addEventListener('load', async () => {
   }
 })
 
-function nextTick() {
-  throw new Error('Function not implemented.');
-}
