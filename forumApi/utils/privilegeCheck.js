@@ -1,5 +1,3 @@
-import { AuthorizationError } from '../utils/errors.js';
-
 const privilegedRoles = new Set(['admin', 'moderator']);
 
 /**

@@ -2,7 +2,7 @@ import CONFIG from '../../../config/config.js';
 
 export function setAuthCookie(res, jwtToken) {
   res.cookie('auth_token', jwtToken, {
-    httpOnly: false,
+    httpOnly: CONFIG.NODE_ENV === 'production',
     secure: false,
     sameSite: 'Strict',
     maxAge: 2 * 60 * 60 * 1000,
