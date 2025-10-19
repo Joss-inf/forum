@@ -1,4 +1,3 @@
-
 import * as AuthService from './auth.service.js';
 
 export async function register(req, res, next) {
