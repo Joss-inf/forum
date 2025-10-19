@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp } from 'vue'
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
@@ -17,10 +17,14 @@ authStore.initializeAuth().then(() => {
   app.mount('#app');
 });
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   const preloader = document.getElementById('preloader')
   if (preloader) {
     preloader.classList.add('fade-out')
-    setTimeout(() => preloader.remove(), 1000)
+    setTimeout(() => preloader.remove(), 100)
   }
 })
+
+function nextTick() {
+  throw new Error('Function not implemented.');
+}

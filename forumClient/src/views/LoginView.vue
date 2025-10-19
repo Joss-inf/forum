@@ -26,7 +26,7 @@ async function handleLogin() {
 
     await nextTick()
     router.push('/forum')
-  } catch (err) {
+  } catch {
     error.value = 'Email ou mot de passe incorrect.'
   } finally {
     isLoading.value = false
