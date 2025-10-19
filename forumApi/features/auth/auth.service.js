@@ -18,13 +18,8 @@ export async function registerUser(userData) {
 
     return newUser;
 
-  } catch (e) {
-    // Si c'est une erreur de duplicata...
-    if (e.code === 'ER_DUP_ENTRY') { // ou le code équivalent pour votre BDD
-      throw new ConflictError('Problème identifiant.');
-    }
-    // Pour toute autre erreur de base de données
-    throw e;
+  } catch {
+    throw new ConflictError('Mot de passe ou identifiant incorrect.');
   }
 }
 
@@ -32,9 +27,8 @@ export async function loginUser(credentials, res) {
   const { email, password } = credentials;
 
   const user = await AuthModel.findByEmail(email);
-  const dummyHash = '$2b$10$abcdefghijklmnopqrstuv'; // Un hash bcrypt valide mais fixe (doit être constant)
-
   if (!user) {
+    const dummyHash = '$2b$10$abcdefghijklmnopqrstuv';
     await bcrypt.compare(password, dummyHash);
     throw new AuthenticationError('Identifiants invalides.');
   }

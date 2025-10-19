@@ -1,3 +1,4 @@
+
 const csrfMiddleware = (req, res, next) => {
   const csrfCookie = req.cookies.csrf_token || req.signedCookies.csrf_token;
   const csrfHeader = req.headers['x-csrf-token'];

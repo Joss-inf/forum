@@ -1,15 +1,10 @@
 import { compactDecrypt, jwtVerify } from 'jose';
 import { AuthenticationError } from '../utils/errors.js'; 
-import dotenv from 'dotenv';
-dotenv.config();
+import  CONFIG from '../config/config.js';
 
-const ENCRYPTION_SECRET = new TextEncoder().encode(process.env.JWE_ENCRYPTION_KEY_256);
-const SIGNATURE_SECRET = new TextEncoder().encode(process.env.JWT_SECRET_HS256);
 
-if (!process.env.JWE_ENCRYPTION_KEY_256 || !process.env.JWT_SECRET_HS256) {
-  console.error('ERREUR FATALE : Les variables d\'environnement JWE_ENCRYPTION_KEY_256 et/ou JWT_SECRET_HS256 sont manquantes.');
-  process.exit(1);
-}
+const ENCRYPTION_SECRET = new TextEncoder().encode(CONFIG.JWE_ENCRYPTION_KEY_256);
+const SIGNATURE_SECRET = new TextEncoder().encode(CONFIG.JWT_SECRET_HS256);
 
 const ERROR_MESSAGES = new Map([
   ['ERR_JWE_DECRYPTION_FAILED', 'Token corrompu ou clé de chiffrement incorrecte.'],

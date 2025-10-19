@@ -1,11 +1,9 @@
 import { SignJWT, CompactEncrypt, jwtVerify, compactDecrypt } from 'jose';
-import dotenv from 'dotenv';
+import CONFIG from '../../../config/config.js';
 
-dotenv.config();
-
-const SIGNATURE_SECRET = new TextEncoder().encode(process.env.JWT_SECRET_HS256);
-const ENCRYPTION_SECRET = new TextEncoder().encode(process.env.JWE_ENCRYPTION_KEY_256);
-const expirationEnv = process.env.EXPIRATION || '2h';
+const SIGNATURE_SECRET = new TextEncoder().encode(CONFIG.JWT_SECRET_HS256);
+const ENCRYPTION_SECRET = new TextEncoder().encode(CONFIG.JWE_ENCRYPTION_KEY_256);
+const expirationEnv = CONFIG.EXPIRATION || '2h';
 
 export async function createSignedAndEncryptedToken(payload) {
   const jws = await new SignJWT(payload)

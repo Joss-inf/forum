@@ -1,5 +1,4 @@
-
-
+import CONFIG from '../../../config/config.js';
 
 export function setAuthCookie(res, jwtToken) {
   res.cookie('auth_token', jwtToken, {
@@ -24,7 +23,7 @@ export function setCsrfCookie(res, csrfSignedToken) {
 export function clearAccessTokenCookie(res) {
   res.clearCookie('auth_token', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: CONFIG.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     signed: true,

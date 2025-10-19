@@ -21,8 +21,13 @@ export interface Tag {
   name: string;
 }
 
-export interface Post {
-  id: number;
+interface ItemWithId {
+  id: number | string;
+  [key: string]: unknown;
+}
+
+export interface Post extends ItemWithId {
+  id: number | string;
   title: string;
   content: string;
   tag_name: string;

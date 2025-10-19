@@ -4,10 +4,9 @@
  * 
  * @async
  * @function getPing
- * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
  * @returns {void}
  */
-export async function getPing(req, res){
+export async function getPing(res){
     res.status(200).json({ message: 'pong' });
 }

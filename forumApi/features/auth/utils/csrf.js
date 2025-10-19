@@ -1,10 +1,8 @@
 import crypto from 'crypto';
-import dotenv from 'dotenv';
+import CONFIG from '../../../config/config.js';
 
-dotenv.config()
 
-const CSRF_SECRET = process.env.CSRF_SECRET;
-
+const CSRF_SECRET = CONFIG.CSRF_SECRET
 export function generateCsrfToken() {
   const token = crypto.randomBytes(32).toString('hex');
   const signature = crypto
