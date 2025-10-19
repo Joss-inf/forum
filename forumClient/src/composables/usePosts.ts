@@ -71,7 +71,7 @@ export function usePosts() {
       if (postsData.value.posts.length > 0) {
         const lastPost = postsData.value.posts[postsData.value.posts.length - 1]
         lastCursorCreatedAt.value = lastPost.created_at
-        lastCursorId.value = lastPost.id
+        lastCursorId.value = typeof lastPost.id === 'number' ? lastPost.id : Number(lastPost.id)
       }
     }
   }
