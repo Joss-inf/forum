@@ -16,3 +16,11 @@ authStore.initializeAuth().then(() => {
   app.use(router);
   app.mount('#app');
 });
+
+window.addEventListener('load', () => {
+  const preloader = document.getElementById('preloader')
+  if (preloader) {
+    preloader.classList.add('fade-out')
+    setTimeout(() => preloader.remove(), 1000)
+  }
+})

@@ -1,13 +1,110 @@
 <!DOCTYPE html>
 <html lang="">
   <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VueSphere</title>
   </head>
   <body>
     <div id="app"></div>
+    <div id="preloader">
+      <div class="loader"></div>
+      <div class="loader-text">VueSphere</div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
+
+<style>
+#preloader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #f4f6fb, #e0e0e0);
+  background-size: 200% 200%;
+  animation: gradientShift 2s ease infinite alternate;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
+  z-index: 99999;
+}
+
+#preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+#preloader.fade-out .loader {
+  transform: scale(0.8);
+  transition: transform 0.9s ease-out;
+}
+#preloader.fade-out .loader:before {
+  animation-play-state: paused;
+  transform: rotate(0.99turn) translate(100%) rotate(0.99turn);
+  transition: transform 0.9s ease-out;
+}
+
+.loader {
+  display: inline-grid;
+  width: 200px;
+  aspect-ratio: 1;
+}
+
+.loader:before,
+.loader:after {
+  content: "";
+  grid-area: 1/1;
+  border-radius: 50%;
+  background: rgb(0, 119, 255);
+  box-shadow: 10px 200px 0 rgba(255, 0, 98, 1);
+}
+
+.loader:before {
+  transform: rotate(0turn) translate(100%) rotate(0turn);
+  animation: orbit 4s linear infinite;
+  filter: drop-shadow(0 0 25px rgba(0, 119, 255, 0.4));
+}
+
+.loader:after {
+  padding: 20%;
+  background: rgb(255, 204, 0);
+  mask: conic-gradient(#000 0 0) content-box exclude,
+        conic-gradient(#000 0 0);
+  scale: -1 1;
+  filter: drop-shadow(0 0 25px rgba(255, 204, 0, 0.3));
+}
+
+@keyframes orbit {
+  to { transform: rotate(1turn) translate(100%) rotate(1turn); }
+}
+
+@keyframes gradientShift {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+.loader-text {
+  margin-top: 2rem;
+  font: 700 1.8rem "Inter", sans-serif;
+  color: #0077ff;
+  letter-spacing: 2px;
+  animation: fadePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes fadePulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@media (max-width: 900px) {
+  .loader { width: 100px; }
+  .loader:before, .loader:after {
+    box-shadow: 10px 100px 0 rgba(255, 0, 98, 1);
+  }
+}
+</style>

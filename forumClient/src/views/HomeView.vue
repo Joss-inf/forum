@@ -271,13 +271,11 @@ strong {
   overflow: hidden;
 }
 .hero-text-content{
-  position: absolute;
   z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  top: 25%;
 }
 .hero-content-wrapper {
   position: relative;

@@ -111,18 +111,20 @@ function handlePostCreated(newPost: Post) {
 }
 
 .post-item {
-  border: 1px solid var(--md-sys-color-outline);
   padding: 1rem;
   background-color: var(--md-sys-color-surface-bright);
   transition: transform 0.2s, box-shadow 0.2s;
   overflow-wrap: break-word;
+  margin-bottom: 2px;
 }
 
 .post-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
 }
-
+.post-item:active{
+  filter: brightness(0.95);
+}
 .post-title {
   margin: 0;
 }

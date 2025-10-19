@@ -56,7 +56,7 @@ async function handleRegister() {
 </script>
 
 <template>
-  <div class="register-wrapper">
+  <div class="auth-page">
     <div class="auth-form-container">
       <form @submit.prevent="handleRegister" class="auth-form">
         <h1>Inscription</h1>
@@ -125,41 +125,38 @@ async function handleRegister() {
   </div>
 </template>
 
-
-
 <style scoped>
-.register-wrapper{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-self: center;
-  flex-direction: row-reverse;
-}
-.auth-form-container {
+.auth-page {
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  min-width: 50vw;
   padding: 10px;
   box-sizing: border-box;
-  animation: fadeInBackground 1.5s ease-out forwards;
-  order: 1;
+  animation: fadeInBackground 1.5s ease-out forwards; 
 }
 
 @keyframes fadeInBackground {
-  from { background-position: 0% 50%; opacity: 0.8; }
-  to { background-position: 100% 50%; opacity: 1; }
+    from { background-position: 0% 50%; opacity: 0.8; }
+    to { background-position: 100% 50%; opacity: 1; }
+}
+
+.auth-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;;
 }
 
 .auth-form {
   background: var(--md-sys-color-surface-bright);
   padding: 3rem 2.5rem;
-  border-radius: var(--md-sys-shape-corner-large);
+  border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   animation: slideIn 0.8s ease-out forwards;
-  width: 100vw;
+  width: 100%;
   max-width: 440px;
 }
 
@@ -169,20 +166,30 @@ async function handleRegister() {
 }
 
 .auth-form h1 {
-  font-size: var(--md-sys-typescale-headline-medium-size); 
+  font-size: 2.5rem;
   font-weight: 700;
   color: var(--md-sys-color-primary);
-  margin:0;
   margin-bottom: 0.5rem;
   text-align: center;
   letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.8rem;
 }
 
 .submit-button {
   width: 100%;
   padding: 1.1rem;
   border: none;
-  border-radius: 10px; 
+  border-radius: 100px;
   background: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface-variant);
   font-size: 1.15rem;
@@ -191,8 +198,6 @@ async function handleRegister() {
   transition: all 0.3s ease;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  margin-top: 1rem;
-  border-radius: var(--md-sys-shape-corner-full);
 }
 
 .submit-button:hover {
@@ -201,7 +206,6 @@ async function handleRegister() {
 }
 
 .submit-button:disabled {
-
   background-color: var(--md-sys-color-surface-container-high);
   color: var(--md-sys-color-on-surface-variant);
   cursor: not-allowed;
@@ -209,30 +213,40 @@ async function handleRegister() {
   transform: none;
 }
 
-/* Responsive */
+.form-links {
+  margin-top: 2rem;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+.form-links a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.3s, text-decoration 0.3s;
+}
+
+.form-links a:hover {
+  color: var(--md-sys-color-primary-dark);
+  text-decoration: underline;
+}
+
 @media (max-width: 600px) {
   .auth-form {
     padding: 2.5rem 1.5rem;
     border-radius: var(--md-sys-shape-corner-medium);
   }
-
   .auth-form h1 {
     font-size: 2rem;
   }
-
-  .form-group label,
-  .form-group input,
   .submit-button,
-  .error-message {
+  .form-links a {
     font-size: 0.9rem;
   }
-
   .submit-button {
     padding: 0.9rem;
-  }
-
-  .auth-form-container{
-    padding: 1rem;
   }
 }
 </style>

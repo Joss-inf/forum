@@ -16,18 +16,23 @@ async function handleLogin() {
   error.value = null
   isLoading.value = true
 
-  await authStore.login(form.value)
+  try {
+    await authStore.login(form.value)
 
-  if (!authStore.user) {
+    if (!authStore.user) {
+      error.value = 'Email ou mot de passe incorrect.'
+      return
+    }
+
+    await nextTick()
+    router.push('/forum')
+  } catch (err) {
     error.value = 'Email ou mot de passe incorrect.'
+  } finally {
     isLoading.value = false
-    return
   }
-
-  await nextTick()
-  router.push('/forum')
-  isLoading.value = false
 }
+
 </script>
 
 
@@ -69,7 +74,6 @@ async function handleLogin() {
 
 <style scoped>
 
-/* Styles globaux pour la page (le conteneur principal du composant) */
 .auth-page {
   margin: 0;
   display: flex;
@@ -78,7 +82,7 @@ async function handleLogin() {
   min-height: 100vh;
   padding: 10px;
   box-sizing: border-box;
-  animation: fadeInBackground 1.5s ease-out forwards; /* Animation d'apparition du fond */
+  animation: fadeInBackground 1.5s ease-out forwards; 
 }
 
 @keyframes fadeInBackground {
