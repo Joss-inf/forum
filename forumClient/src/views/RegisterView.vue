@@ -44,13 +44,8 @@ async function handleRegister() {
   try {
     // Appel au store
     await authStore.register(form.value)
-
-    // Vérifie si l'inscription a réussi
-    if (authStore.user) {
-      await router.push('/login')
-    } else {
-      error.value = 'Une erreur est survenue lors de l\'inscription.'
-    }
+    await router.push('/login')
+   
   } catch {
     error.value = 'Une erreur inattendue est survenue.'
   }
